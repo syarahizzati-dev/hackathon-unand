@@ -37,7 +37,7 @@
                     <div class="aspect-square rounded-lg flex items-center justify-center text-xs sm:text-sm font-medium transition-all duration-200 cursor-default relative group {{ $cell['isToday'] ? 'ring-2 ring-blue-500 ring-offset-1' : '' }} {{ $moodClass }}">
                         {{ $cell['day'] }}
                         @if($cell['mood'])
-                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-800 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
+                        <div class="hidden sm:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-800 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
                             <p class="font-semibold">{{ $cell['day'] }} — {{ ucfirst($cell['mood']['mood']) }}</p>
                             <p>Skor {{ $cell['mood']['skor'] }}/25 | Risiko {{ $cell['mood']['risk_level'] }}</p>
                             <p>{{ $cell['mood']['description'] }}</p>

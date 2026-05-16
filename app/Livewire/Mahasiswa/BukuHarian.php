@@ -34,39 +34,22 @@ class BukuHarian extends Component
             'buku_harian',
             $entry->id
         );
+        $label = $result['label'] ?? 0;
+        $safeOutput = (new AIService())->buildSafeOutput($this->newEntry, $label);
 
         // Update entri dengan hasil analisis
         $entry->update([
-            'ai_reply' => $result['ai_reply'] ?? $this->fallbackReply(),
-            'ai_saran' => $result['ai_saran'] ?? $this->fallbackSaran(),
-            'label' => $result['label'] ?? 0,
+            'ai_reply' => $result['ai_reply'] ?? $safeOutput['ai_reply'],
+            'ai_saran' => $result['ai_saran'] ?? $safeOutput['ai_saran'],
+            'label' => $label,
             'risk_level' => $result['risk_level'] ?? 'LOW',
             'confidence' => $result['confidence'] ?? 0,
+            'analysis_metadata' => $result['analysis_metadata'] ?? null,
             'is_analyzed' => true,
         ]);
 
         $this->isAnalyzing = false;
         $this->newEntry = '';
-    }
-
-    /**
-     * Fallback reply saat AI tidak tersedia.
-     */
-    private function fallbackReply(): string
-    {
-        return 'Terima kasih sudah berbagi perasaanmu hari ini. Kamu tidak sendirian — selalu ada yang peduli padamu. 💙';
-    }
-
-    /**
-     * Fallback saran saat AI tidak tersedia.
-     */
-    private function fallbackSaran(): array
-    {
-        return [
-            'Jalan-jalan santai di luar rumah selama 15 menit',
-            'Tulis 3 hal yang kamu syukuri hari ini',
-            'Dengarkan musik favoritmu',
-        ];
     }
 
     public function render()

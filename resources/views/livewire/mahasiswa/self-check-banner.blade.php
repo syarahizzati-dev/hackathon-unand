@@ -32,10 +32,10 @@
 
     {{-- ═══ Self-Check Form (Inline Modal) ═══ --}}
     @if($showForm)
-    <div class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    <div class="fixed inset-0 z-[60] flex items-start sm:items-center justify-center overflow-y-auto bg-black/50 backdrop-blur-sm p-4"
          x-data x-transition:enter="transition ease-out duration-200"
          x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
-        <div class="w-full max-w-lg mx-4">
+        <div class="w-full max-w-lg my-4 sm:my-6">
             @livewire('mahasiswa.self-check-form', key('self-check-form'))
             <button wire:click="closeForm"
                     class="mt-3 w-full text-center text-white/80 hover:text-white text-sm py-2 transition-colors">

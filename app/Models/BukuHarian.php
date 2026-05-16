@@ -17,6 +17,7 @@ class BukuHarian extends Model
         'label',
         'risk_level',
         'confidence',
+        'analysis_metadata',
         'is_analyzed',
     ];
 
@@ -26,6 +27,7 @@ class BukuHarian extends Model
             'ai_saran'    => 'array',
             'label'       => 'integer',
             'confidence'  => 'float',
+            'analysis_metadata' => 'array',
             'is_analyzed' => 'boolean',
         ];
     }

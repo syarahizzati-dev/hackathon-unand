@@ -19,6 +19,9 @@ Route::middleware(['auth', 'mahasiswa'])->group(function () {
     Route::view('/student-dashboard', 'mahasiswa.dashboard')
         ->name('mahasiswa.dashboard');
 
+    Route::redirect('/dashboard', '/student-dashboard')
+        ->name('dashboard');
+
     Route::view('/mood', 'mahasiswa.mood')
         ->name('mahasiswa.mood');
 
@@ -27,6 +30,9 @@ Route::middleware(['auth', 'mahasiswa'])->group(function () {
 
     Route::view('/tukar-pikiran', 'mahasiswa.tukar-pikiran')
         ->name('mahasiswa.tukar-pikiran');
+
+    Route::view('/profile', 'profile')
+        ->name('profile');
 });
 
 // ─── Admin Routes ──────────────────────────────────────────────

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('program_studi', 100)->nullable();
             $table->string('kontak_darurat', 20)->nullable();
             $table->string('password');
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('username_anonim', 50)->nullable();
             $table->boolean('is_admin')->default(0);
             $table->rememberToken();

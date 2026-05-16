@@ -17,6 +17,8 @@ class Alert extends Model
         'confidence',
         'kata_kunci',
         'cuplikan_teks',
+        'admin_steps',
+        'analysis_metadata',
         'is_handled',
         'handled_by',
         'handled_at',
@@ -29,6 +31,8 @@ class Alert extends Model
     {
         return [
             'kata_kunci'      => 'array',
+            'admin_steps'     => 'array',
+            'analysis_metadata' => 'array',
             'label'           => 'integer',
             'confidence'      => 'float',
             'is_handled'      => 'boolean',

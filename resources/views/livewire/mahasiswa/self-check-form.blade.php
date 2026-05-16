@@ -1,4 +1,4 @@
-<div class="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden" x-data
+<div class="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden max-h-[calc(100vh-7rem)] sm:max-h-[calc(100vh-3rem)] overflow-y-auto" x-data
      x-transition:enter="transition ease-out duration-300 transform"
      x-transition:enter-start="opacity-0 scale-95 translate-y-4" x-transition:enter-end="opacity-100 scale-100 translate-y-0">
 

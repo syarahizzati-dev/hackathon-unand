@@ -1,6 +1,6 @@
 <div class="space-y-6" wire:key="admin-dashboard">
     {{-- ═══ KPI Cards ═══ --}}
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {{-- Total Mahasiswa --}}
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between mb-3">

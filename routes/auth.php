@@ -20,6 +20,8 @@ Route::middleware('guest')->group(function () {
     Volt::route('/', 'pages.auth.login')
         ->name('login');
 
+    Volt::route('login', 'pages.auth.login');
+
     Volt::route('register', 'pages.auth.register')
         ->name('register');
 

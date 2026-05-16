@@ -62,30 +62,11 @@ class SelfCheckForm extends Component
         $service = new AIService();
         $result = $service->predict($teksGabung);
 
-        $label = $result['label'] ?? 0;
-        $riskLevel = $result['risk_level'] ?? 'LOW';
-        $confidence = $result['confidence'] ?? 0;
-
-        // Fallback: jika AI tidak tersedia, gunakan skor-based
-        if ($confidence <= 0) {
-            if ($this->skorTotal >= 21) {
-                $label = 0;       // NORMAL
-                $riskLevel = 'LOW';
-            } elseif ($this->skorTotal >= 17) {
-                $label = 1;       // MENTAL_FATIGUE
-                $riskLevel = 'LOW';
-            } elseif ($this->skorTotal >= 13) {
-                $label = 2;       // EMOTIONAL_STRESS
-                $riskLevel = 'MEDIUM';
-            } elseif ($this->skorTotal >= 9) {
-                $label = 3;       // DEPRESSION_RISK
-                $riskLevel = 'HIGH';
-            } else {
-                $label = 4;       // SUICIDAL_IDEATION
-                $riskLevel = 'CRITICAL';
-            }
-            $confidence = 0.85;
-        }
+        $aiLabel = $result['label'] ?? 0;
+        $scoreLabel = $this->labelFromScore($this->skorTotal);
+        $label = $scoreLabel;
+        $riskLevel = $this->riskLevelFromLabel($label);
+        $confidence = max((float) ($result['confidence'] ?? 0), 0.85);
 
         // Simpan ke database
         $selfCheck = SelfCheck::create([
@@ -115,6 +96,14 @@ class SelfCheckForm extends Component
                 'confidence'    => $confidence,
                 'kata_kunci'    => ['self-check kritis', 'skor rendah: ' . $this->skorTotal . '/25'],
                 'cuplikan_teks' => mb_substr($teksGabung, 0, 200),
+                'admin_steps' => $service->buildSafeOutput($teksGabung, $label)['admin_steps'],
+                'analysis_metadata' => [
+                    'ai_label' => $aiLabel,
+                    'score_label' => $scoreLabel,
+                    'final_label' => $label,
+                    'final_risk_level' => $riskLevel,
+                    'score_total' => $this->skorTotal,
+                ],
                 'is_handled'    => false,
             ]);
 
@@ -136,5 +125,26 @@ class SelfCheckForm extends Component
     public function render()
     {
         return view('livewire.mahasiswa.self-check-form');
+    }
+
+    private function labelFromScore(int $score): int
+    {
+        return match (true) {
+            $score >= 21 => 0,
+            $score >= 17 => 1,
+            $score >= 13 => 2,
+            $score >= 9 => 3,
+            default => 4,
+        };
+    }
+
+    private function riskLevelFromLabel(int $label): string
+    {
+        return match (true) {
+            $label >= 4 => 'CRITICAL',
+            $label >= 3 => 'HIGH',
+            $label >= 2 => 'MEDIUM',
+            default => 'LOW',
+        };
     }
 }

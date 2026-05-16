@@ -17,7 +17,7 @@
     <div class="bg-white rounded-xl border-l-4 shadow-sm overflow-hidden {{ $alert->label >= 4 ? 'border-l-red-500 border border-red-200' : ($alert->label >= 3 ? 'border-l-red-400 border border-red-100' : 'border-l-yellow-400 border border-yellow-100') }}" wire:key="alert-{{ $alert->id }}">
         <div class="p-5">
             {{-- Header: Badge + Waktu --}}
-            <div class="flex items-center justify-between mb-3">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-3">
                 <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold {{ $alert->label >= 3 ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700' }}">
                     <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>
                     {{ $alert->label >= 3 ? 'KRITIS' : 'WASPADA' }}
@@ -42,22 +42,39 @@
             <p class="text-sm text-slate-700 bg-slate-50 rounded-lg p-3 border border-slate-100 leading-relaxed italic">"{{ $alert->cuplikan_teks }}"</p>
             @endif
 
+            @if($alert->admin_steps && count($alert->admin_steps) > 0)
+            <div class="mt-4 bg-red-50 border border-red-100 rounded-lg p-4">
+                <div class="flex items-center gap-2 mb-3">
+                    <svg class="w-4 h-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286Z"/></svg>
+                    <p class="text-sm font-semibold text-red-700">Langkah yang Disarankan</p>
+                </div>
+                <ol class="space-y-2">
+                    @foreach($alert->admin_steps as $step)
+                    <li class="flex gap-2 text-sm text-red-800 leading-relaxed">
+                        <span class="flex-shrink-0 w-5 h-5 rounded-full bg-red-100 text-red-700 text-xs font-bold flex items-center justify-center">{{ $loop->iteration }}</span>
+                        <span>{{ $step }}</span>
+                    </li>
+                    @endforeach
+                </ol>
+            </div>
+            @endif
+
             {{-- Aksi --}}
-            <div class="flex items-center gap-3 mt-4">
+            <div class="flex flex-col sm:flex-row sm:flex-wrap gap-3 mt-4">
                 @if(!isset($openedIdentities[$alert->id]))
-                <button wire:click="openIdentity({{ $alert->id }})" class="inline-flex items-center gap-2 bg-blue-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-blue-800 transition-colors min-h-[44px]">
+                <button wire:click="openIdentity({{ $alert->id }})" class="inline-flex w-full sm:w-auto items-center justify-center gap-2 bg-blue-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-blue-800 transition-colors min-h-[44px]">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
                     Buka Identitas Darurat
                 </button>
                 @else
-                <button wire:click="hideIdentity({{ $alert->id }})" class="inline-flex items-center gap-2 bg-slate-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-slate-700 transition-colors min-h-[44px]">
+                <button wire:click="hideIdentity({{ $alert->id }})" class="inline-flex w-full sm:w-auto items-center justify-center gap-2 bg-slate-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-slate-700 transition-colors min-h-[44px]">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88"/></svg>
                     Sembunyikan Identitas
                 </button>
                 @endif
 
                 <button wire:click="handleAlert({{ $alert->id }})" wire:confirm="Yakin ingin menandai alert ini sebagai ditindaklanjuti?"
-                        class="inline-flex items-center gap-2 bg-green-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-green-700 transition-colors min-h-[44px]">
+                        class="inline-flex w-full sm:w-auto items-center justify-center gap-2 bg-green-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-green-700 transition-colors min-h-[44px]">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
                     Tindaklanjuti
                 </button>

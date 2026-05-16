@@ -31,7 +31,7 @@ class ProfileTest extends TestCase
         $this->actingAs($user);
 
         $component = Volt::test('profile.update-profile-information-form')
-            ->set('name', 'Test User')
+            ->set('nama', 'Test User')
             ->set('email', 'test@example.com')
             ->call('updateProfileInformation');
 
@@ -41,7 +41,7 @@ class ProfileTest extends TestCase
 
         $user->refresh();
 
-        $this->assertSame('Test User', $user->name);
+        $this->assertSame('Test User', $user->nama);
         $this->assertSame('test@example.com', $user->email);
         $this->assertNull($user->email_verified_at);
     }
@@ -53,7 +53,7 @@ class ProfileTest extends TestCase
         $this->actingAs($user);
 
         $component = Volt::test('profile.update-profile-information-form')
-            ->set('name', 'Test User')
+            ->set('nama', 'Test User')
             ->set('email', $user->email)
             ->call('updateProfileInformation');
 

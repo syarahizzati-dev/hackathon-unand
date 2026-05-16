@@ -59,6 +59,8 @@ class TukarPikiran extends Component
                 'confidence'    => $confidence,
                 'kata_kunci'    => AIService::extractKeywordsStatic($this->newPost),
                 'cuplikan_teks' => mb_substr($this->newPost, 0, 200),
+                'admin_steps' => $result['admin_steps'] ?? $service->buildSafeOutput($this->newPost, $label)['admin_steps'],
+                'analysis_metadata' => $result['analysis_metadata'] ?? null,
                 'is_handled'    => false,
             ]);
 
