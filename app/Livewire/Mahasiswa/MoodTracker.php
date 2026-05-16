@@ -53,7 +53,8 @@ class MoodTracker extends Component
             $latestCheck = $dayChecks->first();
             $skor = $latestCheck->skor_total;
 
-            // Warna berdasarkan skor
+            // Warna berdasarkan skor — konsisten dengan fitur.md
+            // Skor ≥ 4 per soal (20+) = Baik, Skor ≥ 3 per soal (13-19) = Waspada, < 13 = Kritis
             if ($skor >= 20) {
                 $mood = 'baik';
             } elseif ($skor >= 13) {
@@ -77,20 +78,13 @@ class MoodTracker extends Component
         $startDayOfWeek = $firstDay->dayOfWeek; // 0=Sunday
 
         $calendar = [];
-        $currentDate = $firstDay->copy()->startOfWeek(Carbon::SUNDAY);
 
-        // Build full weeks
-        while ($currentDate->month < $this->currentMonth || $currentDate->lte($firstDay)) {
-            if ($currentDate->gte($firstDay)) break;
-            $currentDate->addDay();
-        }
-
-        // Reset and build properly
-        $calendar = [];
-        // Pad leading blanks
+        // Pad leading blanks for days before the 1st
         for ($i = 0; $i < $startDayOfWeek; $i++) {
             $calendar[] = null;
         }
+
+        // Fill in actual days
         for ($day = 1; $day <= $daysInMonth; $day++) {
             $dateStr = Carbon::create($this->currentYear, $this->currentMonth, $day)->format('Y-m-d');
             $calendar[] = [
@@ -126,6 +120,7 @@ class MoodTracker extends Component
                 'baik' => $baik++,
                 'waspada' => $waspada++,
                 'kritis' => $kritis++,
+                default => null,
             };
         }
 

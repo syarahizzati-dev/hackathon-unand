@@ -44,7 +44,7 @@
             <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2 flex-wrap">
                     <span class="text-sm font-medium text-slate-800">{{ $post->user->username_anonim ?? 'Anonim' }}</span>
-                    <span class="text-xs text-slate-400">{{ $post->created_at->translatedFormat('d M, H:i') }}</span>
+                    <span class="text-xs text-slate-400">{{ $post->created_at->translatedFormat('d M') }}, {{ $post->created_at->format('H.i') }}</span>
                 </div>
                 <p class="mt-1 text-sm text-slate-700 leading-relaxed">{{ $post->konten }}</p>
             </div>
@@ -77,7 +77,7 @@
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-2 flex-wrap">
                         <span class="text-sm font-medium text-slate-800">{{ $reply->user->username_anonim ?? 'Anonim' }}</span>
-                        <span class="text-xs text-slate-400">{{ $reply->created_at->translatedFormat('d M, H:i') }}</span>
+                        <span class="text-xs text-slate-400">{{ $reply->created_at->translatedFormat('d M') }}, {{ $reply->created_at->format('H.i') }}</span>
                     </div>
                     <p class="mt-0.5 text-sm text-slate-600">{{ $reply->konten }}</p>
                 </div>

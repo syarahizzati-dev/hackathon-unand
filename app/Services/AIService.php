@@ -157,6 +157,14 @@ class AIService
     }
 
     /**
+     * Ekstrak kata kunci berbahaya dari teks (public alias).
+     */
+    public static function extractKeywordsStatic(string $text): array
+    {
+        return self::extractKeywords($text);
+    }
+
+    /**
      * Ekstrak kata kunci berbahaya dari teks.
      */
     protected static function extractKeywords(string $text): array

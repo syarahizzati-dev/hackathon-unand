@@ -8,8 +8,8 @@ use App\Models\ForumReply;
 use App\Models\ForumLike;
 use App\Models\Alert;
 use App\Models\ActivityLog;
+use App\Services\AIService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 
 class TukarPikiran extends Component
 {
@@ -30,29 +30,14 @@ class TukarPikiran extends Component
             'newPost' => 'required|string|min:3|max:5000',
         ]);
 
-        $label = 0;
-        $riskLevel = 'LOW';
-        $isHidden = false;
+        // Analisis via AIService (single prediction call)
+        $service = new AIService();
+        $result = $service->predict($this->newPost);
 
-        // Coba panggil FastAPI untuk analisis
-        try {
-            $baseUrl = config('services.fastapi.url', 'http://127.0.0.1:8000');
-            $response = Http::timeout(30)->post("{$baseUrl}/predict", [
-                'text' => $this->newPost,
-            ]);
-
-            if ($response->successful()) {
-                $result = $response->json();
-                $label = $result['label'] ?? 0;
-                $riskLevel = $result['risk_level'] ?? 'LOW';
-
-                if ($label >= 3) {
-                    $isHidden = true;
-                }
-            }
-        } catch (\Exception $e) {
-            // Lanjut tanpa AI jika tidak tersedia
-        }
+        $label = $result['label'] ?? 0;
+        $riskLevel = $result['risk_level'] ?? 'LOW';
+        $confidence = $result['confidence'] ?? 0;
+        $isHidden = $label >= 3;
 
         $post = ForumPost::create([
             'user_id'    => Auth::id(),
@@ -62,7 +47,7 @@ class TukarPikiran extends Component
             'is_hidden'  => $isHidden,
         ]);
 
-        // Jika label >= 3 → buat Alert
+        // Jika label >= 3 → buat Alert langsung (tanpa double prediction)
         if ($label >= 3) {
             $alert = Alert::create([
                 'user_id'       => Auth::id(),
@@ -70,19 +55,19 @@ class TukarPikiran extends Component
                 'sumber_id'     => $post->id,
                 'label'         => $label,
                 'risk_level'    => $riskLevel,
-                'confidence'    => 0.85,
-                'kata_kunci'    => ['forum berisiko'],
+                'confidence'    => $confidence,
+                'kata_kunci'    => AIService::extractKeywordsStatic($this->newPost),
                 'cuplikan_teks' => mb_substr($this->newPost, 0, 200),
                 'is_handled'    => false,
             ]);
 
             ActivityLog::create([
                 'aksi'           => 'alert_dibuat',
-                'severity'       => $label == 4 ? 'kritis' : 'waspada',
+                'severity'       => $label >= 4 ? 'kritis' : 'waspada',
                 'alert_id'       => $alert->id,
                 'target_user_id' => Auth::id(),
                 'actor_label'    => 'Sistem',
-                'detail'         => 'Alert otomatis: postingan forum terdeteksi berisiko',
+                'detail'         => 'Alert otomatis: postingan forum terdeteksi berisiko (' . $riskLevel . ')',
             ]);
         }
 

@@ -31,7 +31,7 @@
                 <div class="flex items-center gap-3 mt-2 text-xs text-slate-400 flex-wrap">
                     <span class="flex items-center gap-1">
                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
-                        {{ $log->created_at->translatedFormat('d M Y, H:i') }}
+                        {{ $log->created_at->translatedFormat('d M Y') }}, {{ $log->created_at->format('H.i') }}
                     </span>
                     @if($log->targetUser)
                     <span>{{ $log->targetUser->username_anonim ?? ('STD-' . str_pad($log->target_user_id, 4, '0', STR_PAD_LEFT)) }}</span>

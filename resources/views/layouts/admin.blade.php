@@ -30,6 +30,28 @@
                 <span class="sm:hidden text-lg font-bold text-slate-800">Admin</span>
             </div>
 
+            {{-- Real-time Clock --}}
+            <div class="hidden sm:flex items-center gap-2 text-sm text-slate-500"
+                 x-data="{
+                    waktu: '',
+                    init() {
+                        this.updateClock();
+                        setInterval(() => this.updateClock(), 1000);
+                    },
+                    updateClock() {
+                        const now = new Date();
+                        const hari = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+                        const bulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+                        const h = String(now.getHours()).padStart(2,'0');
+                        const m = String(now.getMinutes()).padStart(2,'0');
+                        const s = String(now.getSeconds()).padStart(2,'0');
+                        this.waktu = hari[now.getDay()] + ', ' + now.getDate() + ' ' + bulan[now.getMonth()] + ' ' + now.getFullYear() + ' • ' + h + '.' + m + '.' + s + ' WIB';
+                    }
+                 }">
+                <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                <span x-text="waktu" class="font-medium tabular-nums"></span>
+            </div>
+
             {{-- Tombol Keluar --}}
             <form method="POST" action="{{ route('logout') }}">
                 @csrf

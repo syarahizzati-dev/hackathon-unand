@@ -56,9 +56,19 @@
         <h3 class="text-2xl font-bold text-slate-800 mb-2">Selesai!</h3>
         <p class="text-slate-500">Terima kasih sudah mengisi self-check hari ini</p>
         @if($skorTotal)
-        <div class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
-                    {{ $skorTotal >= 20 ? 'bg-green-100 text-green-700' : ($skorTotal >= 13 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700') }}">
-            <span>Skor: {{ $skorTotal }}/25</span>
+        <div class="mt-4 space-y-2">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
+                        {{ $skorTotal >= 20 ? 'bg-green-100 text-green-700' : ($skorTotal >= 13 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700') }}">
+                <span>Skor: {{ $skorTotal }}/25</span>
+            </div>
+            <p class="text-xs text-slate-400">
+                @if($skorTotal >= 21) Kondisi: Normal — Terus jaga kesehatanmu! 💚
+                @elseif($skorTotal >= 17) Kondisi: Sedikit Lelah — Istirahat yang cukup ya 💛
+                @elseif($skorTotal >= 13) Kondisi: Perlu Perhatian — Jangan ragu untuk cerita 🧡
+                @elseif($skorTotal >= 9) Kondisi: Waspada — Kami ada untukmu ❤️
+                @else Kondisi: Butuh Bantuan — Segera hubungi konselor 🆘
+                @endif
+            </p>
         </div>
         @endif
     </div>

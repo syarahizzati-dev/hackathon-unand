@@ -43,7 +43,7 @@
                 <span class="w-2.5 h-2.5 rounded-full bg-green-500 flex-shrink-0"></span>
                 <div>
                     <p class="text-sm font-medium text-slate-700">Self-check selesai</p>
-                    <p class="text-xs text-slate-400">{{ $latestSelfCheck->created_at->translatedFormat('l, H:i') }}</p>
+                    <p class="text-xs text-slate-400" x-data="{ time: '{{ $latestSelfCheck->created_at->isToday() ? 'Hari ini' : $latestSelfCheck->created_at->translatedFormat('l') }}, {{ $latestSelfCheck->created_at->format('H.i') }}' }" x-text="time"></p>
                 </div>
             </div>
             @endif
@@ -53,7 +53,7 @@
                 <span class="w-2.5 h-2.5 rounded-full bg-blue-500 flex-shrink-0"></span>
                 <div>
                     <p class="text-sm font-medium text-slate-700">Menulis Buku Harian</p>
-                    <p class="text-xs text-slate-400">{{ $latestDiary->created_at->translatedFormat('l, H:i') }}</p>
+                    <p class="text-xs text-slate-400" x-data="{ time: '{{ $latestDiary->created_at->isToday() ? 'Hari ini' : $latestDiary->created_at->translatedFormat('l') }}, {{ $latestDiary->created_at->format('H.i') }}' }" x-text="time"></p>
                 </div>
             </div>
             @endif

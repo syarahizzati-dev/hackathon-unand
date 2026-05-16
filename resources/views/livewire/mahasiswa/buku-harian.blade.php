@@ -33,7 +33,7 @@
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-2 flex-wrap">
                         <span class="text-sm font-medium text-slate-800">Kamu ({{ Auth::user()->username_anonim }})</span>
-                        <span class="text-xs text-slate-400">{{ $entry->created_at->translatedFormat('l, d M Y H:i') }}</span>
+                        <span class="text-xs text-slate-400">{{ $entry->created_at->translatedFormat('l, d M Y') }} {{ $entry->created_at->format('H.i') }}</span>
                     </div>
                     <p class="mt-2 text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">{{ $entry->isi }}</p>
                 </div>
@@ -110,7 +110,7 @@
     {{-- Input Area --}}
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sticky bottom-16 md:bottom-0 z-30">
         <form wire:submit="simpan">
-            <textarea wire:model="newEntry" rows="3" placeholder="Tulis curhatan atau perasaanmu hari ini..."
+            <textarea wire:model.live="newEntry" rows="3" placeholder="Tulis curhatan atau perasaanmu hari ini..."
                       class="w-full border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none min-h-[44px]"
                       @keydown.enter.exact.prevent="$wire.simpan()"></textarea>
             @error('newEntry')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror

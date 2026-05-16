@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\SelfCheck;
 use App\Models\Alert;
 use App\Models\ActivityLog;
+use App\Services\AIService;
 use Illuminate\Support\Facades\Auth;
 
 class SelfCheckForm extends Component
@@ -56,24 +57,33 @@ class SelfCheckForm extends Component
             $teksGabung .= $q['teks'] . ': ' . ($labelMap[$val] ?? 'Biasa') . '. ';
         }
 
-        // Tentukan label dan risk_level berdasarkan skor
-        // Skor range: 5-25
-        // 20-25 = label 0-1 (Normal/Low), 13-19 = label 2 (Medium), 5-12 = label 3-4 (High/Critical)
-        if ($this->skorTotal >= 20) {
-            $label = 0;
-            $riskLevel = 'LOW';
-        } elseif ($this->skorTotal >= 15) {
-            $label = 1;
-            $riskLevel = 'LOW';
-        } elseif ($this->skorTotal >= 10) {
-            $label = 2;
-            $riskLevel = 'MEDIUM';
-        } elseif ($this->skorTotal >= 7) {
-            $label = 3;
-            $riskLevel = 'HIGH';
-        } else {
-            $label = 4;
-            $riskLevel = 'CRITICAL';
+        // ─── Prediksi via AIService (IndoBERT) ─────────────────
+        $service = new AIService();
+        $result = $service->predict($teksGabung);
+
+        $label = $result['label'] ?? 0;
+        $riskLevel = $result['risk_level'] ?? 'LOW';
+        $confidence = $result['confidence'] ?? 0;
+
+        // Fallback: jika AI tidak tersedia, gunakan skor-based
+        if ($confidence <= 0) {
+            if ($this->skorTotal >= 21) {
+                $label = 0;       // NORMAL
+                $riskLevel = 'LOW';
+            } elseif ($this->skorTotal >= 17) {
+                $label = 1;       // MENTAL_FATIGUE
+                $riskLevel = 'LOW';
+            } elseif ($this->skorTotal >= 13) {
+                $label = 2;       // EMOTIONAL_STRESS
+                $riskLevel = 'MEDIUM';
+            } elseif ($this->skorTotal >= 9) {
+                $label = 3;       // DEPRESSION_RISK
+                $riskLevel = 'HIGH';
+            } else {
+                $label = 4;       // SUICIDAL_IDEATION
+                $riskLevel = 'CRITICAL';
+            }
+            $confidence = 0.85;
         }
 
         // Simpan ke database
@@ -88,7 +98,7 @@ class SelfCheckForm extends Component
             'teks_gabung' => $teksGabung,
             'label'      => $label,
             'risk_level' => $riskLevel,
-            'confidence' => 0.85,
+            'confidence' => $confidence,
         ]);
 
         // Jika label >= 3 → buat Alert
@@ -99,19 +109,19 @@ class SelfCheckForm extends Component
                 'sumber_id'     => $selfCheck->id,
                 'label'         => $label,
                 'risk_level'    => $riskLevel,
-                'confidence'    => 0.85,
-                'kata_kunci'    => ['self-check kritis'],
+                'confidence'    => $confidence,
+                'kata_kunci'    => ['self-check kritis', 'skor rendah: ' . $this->skorTotal . '/25'],
                 'cuplikan_teks' => mb_substr($teksGabung, 0, 200),
                 'is_handled'    => false,
             ]);
 
             ActivityLog::create([
                 'aksi'           => 'alert_dibuat',
-                'severity'       => $label == 4 ? 'kritis' : 'waspada',
+                'severity'       => $label >= 4 ? 'kritis' : 'waspada',
                 'alert_id'       => $alert->id,
                 'target_user_id' => Auth::id(),
                 'actor_label'    => 'Sistem',
-                'detail'         => 'Alert otomatis: skor self-check rendah (' . $this->skorTotal . '/25)',
+                'detail'         => 'Alert otomatis: skor self-check rendah (' . $this->skorTotal . '/25, risiko: ' . $riskLevel . ')',
             ]);
         }
 

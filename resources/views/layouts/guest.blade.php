@@ -5,8 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>CAMPUS-E — Sistem Prediksi Proaktif Risiko Depresi Mahasiswa</title>
-        <meta name="description" content="CAMPUS-E adalah sistem prediksi proaktif risiko depresi mahasiswa berbasis AI IndoBERT.">
+        <title>CAMPUS-E — Sistem Prediksi Resiko Depresi Mahasiswa</title>
+        <meta name="description" content="CAMPUS-E adalah sistem prediksi resiko depresi mahasiswa berbasis AI IndoBERT.">
 
         <!-- Fonts: Inter (sesuai Figma) -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -25,7 +25,7 @@
                     C
                 </div>
                 <h1 class="text-2xl sm:text-[30px] font-bold text-slate-800 leading-9 text-center">CAMPUS-E</h1>
-                <p class="text-slate-500 text-sm sm:text-base mt-1 text-center">Sistem Prediksi Proaktif Risiko Depresi Mahasiswa</p>
+                <p class="text-slate-500 text-sm sm:text-base mt-1 text-center">Sistem Prediksi Resiko Depresi Mahasiswa</p>
             </div>
 
             <!-- Form Card -->

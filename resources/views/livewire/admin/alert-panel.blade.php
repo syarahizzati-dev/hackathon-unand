@@ -24,7 +24,7 @@
                 </span>
                 <span class="flex items-center gap-1 text-xs text-slate-400">
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
-                    {{ $alert->created_at->translatedFormat('d M Y, H:i') }}
+                    {{ $alert->created_at->translatedFormat('d M Y') }}, {{ $alert->created_at->format('H.i') }}
                 </span>
             </div>
 
@@ -69,7 +69,7 @@
         <div class="border-t border-blue-200 bg-blue-50 p-5" x-data x-transition>
             <div class="flex items-center gap-2 mb-4 text-xs text-blue-600">
                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg>
-                Identitas dibuka pada {{ $alert->opened_at ? $alert->opened_at->translatedFormat('d M Y, H:i') : now()->translatedFormat('d M Y, H:i') }}
+                Identitas dibuka pada {{ $alert->opened_at ? $alert->opened_at->translatedFormat('d M Y') . ', ' . $alert->opened_at->format('H.i') : now()->translatedFormat('d M Y') . ', ' . now()->format('H.i') }}
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div><p class="text-xs text-slate-500">Nama Lengkap</p><p class="text-sm font-medium text-slate-800">{{ $alert->user->nama ?? '-' }}</p></div>
