@@ -81,32 +81,6 @@
     </div>
     @endif
 
-    {{-- Latest AI Reply (after submission) --}}
-    @if($latestAiReply && !$isAnalyzing)
-    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 border border-blue-100 shadow-sm">
-        <div class="flex items-center gap-2 mb-3">
-            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"/></svg>
-            </div>
-            <span class="text-sm font-semibold text-blue-700">CAMPUS-E AI Assistant</span>
-        </div>
-        <p class="text-sm text-slate-700 leading-relaxed">{{ $latestAiReply['text'] }}</p>
-        @if(!empty($latestAiReply['saran']))
-        <div class="mt-3 bg-white rounded-lg p-3 border border-blue-100">
-            <div class="flex items-center gap-1.5 mb-2">
-                <svg class="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
-                <span class="text-xs font-semibold text-slate-700">Saran Kegiatan Untukmu:</span>
-            </div>
-            <ul class="space-y-1.5">
-                @foreach($latestAiReply['saran'] as $saran)
-                <li class="flex items-start gap-2 text-sm text-slate-600"><span class="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 flex-shrink-0"></span>{{ $saran }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
-    </div>
-    @endif
-
     {{-- Input Area --}}
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sticky bottom-16 md:bottom-0 z-30">
         <form wire:submit="simpan">

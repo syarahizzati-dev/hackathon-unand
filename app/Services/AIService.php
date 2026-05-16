@@ -34,13 +34,19 @@ class AIService
 
             if ($response->successful()) {
                 $data = $response->json();
+                $label = (int) ($data['label'] ?? 0);
+                $local = $this->localAnalysis($text);
+
+                if ($local['label'] > $label) {
+                    $label = $local['label'];
+                }
 
                 return [
-                    'label'      => $data['label'] ?? 0,
-                    'risk_level' => $data['risk_level'] ?? 'LOW',
-                    'confidence' => $data['confidence'] ?? 0.0,
-                    'ai_reply'   => $data['ai_reply'] ?? $this->fallbackReply($data['label'] ?? 0),
-                    'ai_saran'   => $data['ai_saran'] ?? $this->fallbackSaran($data['label'] ?? 0),
+                    'label'      => $label,
+                    'risk_level' => $this->riskLevelFromLabel($label),
+                    'confidence' => max((float) ($data['confidence'] ?? 0.0), $local['confidence']),
+                    'ai_reply'   => $data['ai_reply'] ?? $this->fallbackReply($label),
+                    'ai_saran'   => $this->suggestionsForText($text, $label, $data['ai_saran'] ?? []),
                 ];
             }
 
@@ -49,14 +55,14 @@ class AIService
                 'body'   => $response->body(),
             ]);
 
-            return $this->fallbackResponse();
+            return $this->fallbackResponse($text);
 
         } catch (\Exception $e) {
             Log::warning('AIService: Gagal menghubungi FastAPI', [
                 'error' => $e->getMessage(),
             ]);
 
-            return $this->fallbackResponse();
+            return $this->fallbackResponse($text);
         }
     }
 
@@ -114,14 +120,17 @@ class AIService
 
     // ─── Fallback Methods ────────────────────────────────────
 
-    protected function fallbackResponse(): array
+    protected function fallbackResponse(string $text = ''): array
     {
+        $local = $this->localAnalysis($text);
+        $label = $local['label'];
+
         return [
-            'label'      => 0,
-            'risk_level' => 'LOW',
-            'confidence' => 0.0,
-            'ai_reply'   => $this->fallbackReply(0),
-            'ai_saran'   => $this->fallbackSaran(0),
+            'label'      => $label,
+            'risk_level' => $this->riskLevelFromLabel($label),
+            'confidence' => $local['confidence'],
+            'ai_reply'   => $this->fallbackReply($label),
+            'ai_saran'   => $this->suggestionsForText($text, $label),
         ];
     }
 
@@ -154,6 +163,84 @@ class AIService
                 'Dengarkan musik favoritmu',
             ],
         };
+    }
+
+    protected function localAnalysis(string $text): array
+    {
+        $textLower = mb_strtolower($text);
+        $criticalWords = [
+            'bunuh diri', 'ingin mati', 'akhiri hidup', 'mengakhiri hidup',
+            'tidak ingin hidup', 'lebih baik mati', 'menyakiti diri',
+        ];
+        $highWords = [
+            'tidak berguna', 'putus asa', 'tidak ada harapan', 'tidak ada gunanya',
+            'tidak ada yang peduli', 'depresi', 'tertekan', 'stress berat', 'stres berat',
+        ];
+        $mediumWords = [
+            'cemas', 'khawatir', 'panik', 'sendiri', 'kesepian', 'menangis',
+            'tidak bisa tidur', 'lelah', 'capek', 'overthinking',
+        ];
+
+        foreach ($criticalWords as $word) {
+            if (str_contains($textLower, $word)) {
+                return ['label' => 4, 'confidence' => 0.95];
+            }
+        }
+
+        foreach ($highWords as $word) {
+            if (str_contains($textLower, $word)) {
+                return ['label' => 3, 'confidence' => 0.9];
+            }
+        }
+
+        foreach ($mediumWords as $word) {
+            if (str_contains($textLower, $word)) {
+                return ['label' => 2, 'confidence' => 0.85];
+            }
+        }
+
+        return ['label' => 0, 'confidence' => 0.0];
+    }
+
+    protected function riskLevelFromLabel(int $label): string
+    {
+        return match (true) {
+            $label >= 4 => 'CRITICAL',
+            $label >= 3 => 'HIGH',
+            $label >= 2 => 'MEDIUM',
+            default => 'LOW',
+        };
+    }
+
+    protected function suggestionsForText(string $text, int $label, array $apiSuggestions = []): array
+    {
+        $textLower = mb_strtolower($text);
+        $suggestions = [];
+
+        if (str_contains($textLower, 'tidur') || str_contains($textLower, 'lelah') || str_contains($textLower, 'capek')) {
+            $suggestions[] = 'Matikan layar 30 menit sebelum tidur dan usahakan tidur lebih awal malam ini';
+            $suggestions[] = 'Lakukan peregangan ringan 10 menit untuk melepas tegang';
+        }
+
+        if (str_contains($textLower, 'cemas') || str_contains($textLower, 'khawatir') || str_contains($textLower, 'panik') || str_contains($textLower, 'overthinking')) {
+            $suggestions[] = 'Coba teknik napas 4-7-8 selama 3 putaran';
+            $suggestions[] = 'Lakukan grounding 5-4-3-2-1 untuk menenangkan pikiran';
+        }
+
+        if (str_contains($textLower, 'sendiri') || str_contains($textLower, 'kesepian') || str_contains($textLower, 'menangis')) {
+            $suggestions[] = 'Kirim pesan ke satu teman atau keluarga yang kamu percaya';
+            $suggestions[] = 'Tulis perasaanmu selama 10 menit tanpa menilai diri sendiri';
+        }
+
+        if ($label >= 4) {
+            array_unshift($suggestions, 'Segera hubungi konselor kampus, kontak darurat, atau hotline kesehatan mental 119 ext. 8');
+        } elseif ($label >= 3) {
+            array_unshift($suggestions, 'Jadwalkan sesi dengan konselor kampus secepatnya');
+        }
+
+        $suggestions = array_values(array_unique(array_merge($suggestions, $apiSuggestions, $this->fallbackSaran($label))));
+
+        return array_slice($suggestions, 0, 3);
     }
 
     /**

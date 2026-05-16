@@ -91,14 +91,43 @@ class Predictor:
         # Clamp label ke range valid
         label = max(0, min(label, 4))
 
-        # Pick random template for variety
         replies = REPLY_TEMPLATES.get(label, REPLY_TEMPLATES[0])
-        saran = SARAN_TEMPLATES.get(label, SARAN_TEMPLATES[0])
+        saran = self._suggestions_for_text(text, label)
 
         return {
             "text": random.choice(replies),
             "saran": saran,
         }
+
+    def _suggestions_for_text(self, text: str, label: int) -> list[str]:
+        text_lower = text.lower()
+        suggestions: list[str] = []
+
+        if any(word in text_lower for word in ["tidur", "lelah", "capek"]):
+            suggestions.extend([
+                "Matikan layar 30 menit sebelum tidur dan usahakan tidur lebih awal malam ini",
+                "Lakukan peregangan ringan 10 menit untuk melepas tegang",
+            ])
+
+        if any(word in text_lower for word in ["cemas", "khawatir", "panik", "overthinking"]):
+            suggestions.extend([
+                "Coba teknik napas 4-7-8 selama 3 putaran",
+                "Lakukan grounding 5-4-3-2-1 untuk menenangkan pikiran",
+            ])
+
+        if any(word in text_lower for word in ["sendiri", "kesepian", "menangis"]):
+            suggestions.extend([
+                "Kirim pesan ke satu teman atau keluarga yang kamu percaya",
+                "Tulis perasaanmu selama 10 menit tanpa menilai diri sendiri",
+            ])
+
+        if label >= 4:
+            suggestions.insert(0, "Segera hubungi konselor kampus, kontak darurat, atau hotline kesehatan mental 119 ext. 8")
+        elif label >= 3:
+            suggestions.insert(0, "Jadwalkan sesi dengan konselor kampus secepatnya")
+
+        suggestions.extend(SARAN_TEMPLATES.get(label, SARAN_TEMPLATES[0]))
+        return list(dict.fromkeys(suggestions))[:3]
 
 
 # ─── Singleton instance ──────────────────────────────────────

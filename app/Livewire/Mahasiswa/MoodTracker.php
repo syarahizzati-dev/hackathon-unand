@@ -3,6 +3,7 @@
 namespace App\Livewire\Mahasiswa;
 
 use Livewire\Component;
+use Livewire\Attributes\On;
 use App\Models\SelfCheck;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -51,24 +52,25 @@ class MoodTracker extends Component
         $this->moodData = [];
         foreach ($checks as $date => $dayChecks) {
             $latestCheck = $dayChecks->first();
-            $skor = $latestCheck->skor_total;
-
-            // Warna berdasarkan skor — konsisten dengan fitur.md
-            // Skor ≥ 4 per soal (20+) = Baik, Skor ≥ 3 per soal (13-19) = Waspada, < 13 = Kritis
-            if ($skor >= 20) {
-                $mood = 'baik';
-            } elseif ($skor >= 13) {
-                $mood = 'waspada';
-            } else {
-                $mood = 'kritis';
-            }
+            $riskLevel = strtoupper($latestCheck->risk_level ?? 'LOW');
+            $mood = $this->moodFromRiskLevel($riskLevel);
 
             $this->moodData[$date] = [
-                'skor' => $skor,
+                'skor' => $latestCheck->skor_total,
                 'mood' => $mood,
+                'risk_level' => $riskLevel,
                 'label' => $latestCheck->label,
+                'confidence' => $latestCheck->confidence,
+                'created_at' => $latestCheck->created_at->format('H.i'),
+                'description' => $this->descriptionFromRiskLevel($riskLevel),
             ];
         }
+    }
+
+    #[On('self-check-completed')]
+    public function refreshAfterSelfCheck(): void
+    {
+        $this->loadMoodData();
     }
 
     public function getCalendarProperty(): array
@@ -125,6 +127,25 @@ class MoodTracker extends Component
         }
 
         return ['baik' => $baik, 'waspada' => $waspada, 'kritis' => $kritis];
+    }
+
+    private function moodFromRiskLevel(string $riskLevel): string
+    {
+        return match ($riskLevel) {
+            'CRITICAL' => 'kritis',
+            'MEDIUM', 'HIGH' => 'waspada',
+            default => 'baik',
+        };
+    }
+
+    private function descriptionFromRiskLevel(string $riskLevel): string
+    {
+        return match ($riskLevel) {
+            'CRITICAL' => 'Risiko CRITICAL, perlu bantuan segera',
+            'HIGH' => 'Risiko HIGH, perlu perhatian dan dukungan',
+            'MEDIUM' => 'Risiko MEDIUM, perlu pemantauan',
+            default => 'Risiko LOW, kondisi stabil',
+        };
     }
 
     public function render()

@@ -3,12 +3,18 @@
 namespace App\Livewire\Admin;
 
 use Livewire\Component;
+use Livewire\Attributes\On;
 use App\Models\ActivityLog as ActivityLogModel;
 use App\Models\Alert;
 use Illuminate\Support\Facades\DB;
 
 class ActivityLog extends Component
 {
+    #[On('activity-log-updated')]
+    public function refreshLogs(): void
+    {
+    }
+
     public function render()
     {
         $logs = ActivityLogModel::with(['alert', 'targetUser:id,username_anonim,nim', 'actor:id,nama'])

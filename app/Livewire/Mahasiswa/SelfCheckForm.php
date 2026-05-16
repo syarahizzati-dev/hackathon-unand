@@ -14,6 +14,7 @@ class SelfCheckForm extends Component
     public int $currentQuestion = 1;
     public array $jawaban = [];
     public bool $isComplete = false;
+    public bool $readyToSubmit = false;
     public ?int $skorTotal = null;
 
     /** @var array<int, array{teks: string}> */
@@ -38,10 +39,10 @@ class SelfCheckForm extends Component
     {
         $this->jawaban[$question] = $value;
 
-        if ($question < 5) {
+        if ($question < count($this->pertanyaan)) {
             $this->currentQuestion = $question + 1;
         } else {
-            $this->submit();
+            $this->readyToSubmit = true;
         }
     }
 
@@ -103,6 +104,8 @@ class SelfCheckForm extends Component
 
         // Jika label >= 3 → buat Alert
         if ($label >= 3) {
+            $moodStatus = $riskLevel === 'CRITICAL' ? 'Kritis' : 'Waspada';
+
             $alert = Alert::create([
                 'user_id'       => Auth::id(),
                 'sumber'        => 'self_check',
@@ -121,11 +124,13 @@ class SelfCheckForm extends Component
                 'alert_id'       => $alert->id,
                 'target_user_id' => Auth::id(),
                 'actor_label'    => 'Sistem',
-                'detail'         => 'Alert otomatis: skor self-check rendah (' . $this->skorTotal . '/25, risiko: ' . $riskLevel . ')',
+                'detail'         => 'Alert otomatis: self-check ' . $moodStatus . ' (skor ' . $this->skorTotal . '/25, risiko: ' . $riskLevel . ')',
             ]);
         }
 
+        $this->dispatch('self-check-completed');
         $this->isComplete = true;
+        $this->readyToSubmit = false;
     }
 
     public function render()

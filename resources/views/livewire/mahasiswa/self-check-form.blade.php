@@ -44,6 +44,19 @@
         @endfor
     </div>
 
+    @if($readyToSubmit)
+    <div class="px-6 pb-6">
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-3">
+            <p class="text-sm font-medium text-blue-800">Semua jawaban sudah terisi.</p>
+            <p class="text-xs text-blue-600 mt-1">Tekan tombol kirim untuk menyimpan self-check dan memperbarui mood tracker.</p>
+        </div>
+        <button wire:click="submit"
+                class="w-full bg-blue-800 hover:bg-blue-900 text-white font-semibold py-3.5 px-5 rounded-xl transition-colors min-h-[44px]">
+            Kirim Self-check
+        </button>
+    </div>
+    @endif
+
     @else
     {{-- ═══ Layar Selesai ═══ --}}
     <div class="p-8 text-center" x-data x-transition:enter="transition ease-out duration-500"

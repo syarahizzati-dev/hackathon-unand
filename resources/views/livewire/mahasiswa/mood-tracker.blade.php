@@ -37,8 +37,10 @@
                     <div class="aspect-square rounded-lg flex items-center justify-center text-xs sm:text-sm font-medium transition-all duration-200 cursor-default relative group {{ $cell['isToday'] ? 'ring-2 ring-blue-500 ring-offset-1' : '' }} {{ $moodClass }}">
                         {{ $cell['day'] }}
                         @if($cell['mood'])
-                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-800 text-white text-[10px] rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
-                            {{ $cell['day'] }} — {{ ucfirst($cell['mood']['mood']) }}
+                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-800 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 shadow-lg">
+                            <p class="font-semibold">{{ $cell['day'] }} — {{ ucfirst($cell['mood']['mood']) }}</p>
+                            <p>Skor {{ $cell['mood']['skor'] }}/25 | Risiko {{ $cell['mood']['risk_level'] }}</p>
+                            <p>{{ $cell['mood']['description'] }}</p>
                         </div>
                         @endif
                     </div>
@@ -48,7 +50,7 @@
         </div>
     </div>
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 sm:p-6">
-        <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-4">Keterangan</h3>
+        <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-4">Keterangan Self-check Harian</h3>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="flex items-center gap-3"><div class="w-6 h-6 bg-[#00c950] rounded flex-shrink-0"></div><div><p class="text-sm font-medium text-slate-800">Baik</p><p class="text-xs text-slate-500">Kondisi positif</p></div></div>
             <div class="flex items-center gap-3"><div class="w-6 h-6 bg-[#fdc700] rounded flex-shrink-0"></div><div><p class="text-sm font-medium text-slate-800">Waspada</p><p class="text-xs text-slate-500">Perlu perhatian</p></div></div>

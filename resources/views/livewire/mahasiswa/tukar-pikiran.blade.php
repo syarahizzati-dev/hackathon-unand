@@ -70,29 +70,64 @@
         @if($post->replies->count() > 0)
         <div class="mt-3 ml-4 pl-4 border-l-2 border-slate-200 space-y-3">
             @foreach($post->replies as $reply)
-            <div class="flex items-start gap-3" wire:key="reply-{{ $reply->id }}">
-                <div class="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span class="text-xs font-medium text-slate-500">{{ mb_substr($reply->user->username_anonim ?? 'A', 0, 1) }}</span>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <span class="text-sm font-medium text-slate-800">{{ $reply->user->username_anonim ?? 'Anonim' }}</span>
-                        <span class="text-xs text-slate-400">{{ $reply->created_at->translatedFormat('d M') }}, {{ $reply->created_at->format('H.i') }}</span>
+            <div wire:key="reply-{{ $reply->id }}" class="space-y-2">
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="text-xs font-medium text-slate-500">{{ mb_substr($reply->user->username_anonim ?? 'A', 0, 1) }}</span>
                     </div>
-                    <p class="mt-0.5 text-sm text-slate-600">{{ $reply->konten }}</p>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="text-sm font-medium text-slate-800">{{ $reply->user->username_anonim ?? 'Anonim' }}</span>
+                            <span class="text-xs text-slate-400">{{ $reply->created_at->translatedFormat('d M') }}, {{ $reply->created_at->format('H.i') }}</span>
+                        </div>
+                        <p class="mt-0.5 text-sm text-slate-600">{{ $reply->konten }}</p>
+                        <button wire:click="startReplyToReply({{ $post->id }}, {{ $reply->id }})" class="mt-1 text-xs font-medium text-blue-600 hover:text-blue-800 min-h-[28px]">Balas</button>
+                    </div>
                 </div>
+
+                @if($replyingToReply === $reply->id)
+                <div class="ml-11" x-data x-transition>
+                    <form wire:submit="kirimBalasan({{ $post->id }}, {{ $reply->id }})" class="flex items-end gap-2">
+                        <input type="text" wire:model="replyText" placeholder="Balas {{ $reply->user->username_anonim ?? 'Anonim' }}..." autofocus
+                               class="flex-1 border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[44px]">
+                        <button type="submit" class="bg-blue-700 text-white p-2.5 rounded-lg hover:bg-blue-800 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/></svg>
+                        </button>
+                    </form>
+                    @error('replyText')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
+                </div>
+                @endif
+
+                @if($reply->children->count() > 0)
+                <div class="ml-11 pl-3 border-l border-blue-100 space-y-2">
+                    @foreach($reply->children as $child)
+                    <div class="flex items-start gap-2" wire:key="reply-child-{{ $child->id }}">
+                        <div class="w-7 h-7 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-[11px] font-medium text-blue-600">{{ mb_substr($child->user->username_anonim ?? 'A', 0, 1) }}</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="text-sm font-medium text-slate-800">{{ $child->user->username_anonim ?? 'Anonim' }}</span>
+                                <span class="text-xs text-slate-400">{{ $child->created_at->translatedFormat('d M') }}, {{ $child->created_at->format('H.i') }}</span>
+                            </div>
+                            <p class="mt-0.5 text-sm text-slate-600">{{ $child->konten }}</p>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @endif
             </div>
             @endforeach
         </div>
         @endif
 
         {{-- Reply Input --}}
-        @if($replyingTo === $post->id)
+        @if($replyingToPost === $post->id && $replyingToReply === null)
         <div class="mt-3 ml-4 pl-4 border-l-2 border-blue-200" x-data x-transition>
             <form wire:submit="kirimBalasan({{ $post->id }})" class="flex items-end gap-2">
                 <input type="text" wire:model="replyText" placeholder="Tulis balasan..." autofocus
-                       class="flex-1 border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[44px]"
-                       @keydown.enter.exact.prevent="$wire.kirimBalasan({{ $post->id }})">
+                        class="flex-1 border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[44px]"
+                        @keydown.enter.exact.prevent="$wire.kirimBalasan({{ $post->id }})">
                 <button type="submit" class="bg-blue-700 text-white p-2.5 rounded-lg hover:bg-blue-800 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/></svg>
                 </button>

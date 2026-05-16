@@ -33,6 +33,11 @@ class ForumPost extends Model
 
     public function replies(): HasMany
     {
+        return $this->hasMany(ForumReply::class, 'post_id')->whereNull('parent_id')->oldest();
+    }
+
+    public function allReplies(): HasMany
+    {
         return $this->hasMany(ForumReply::class, 'post_id');
     }
 

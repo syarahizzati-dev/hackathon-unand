@@ -11,7 +11,6 @@ class BukuHarian extends Component
 {
     public string $newEntry = '';
     public bool $isAnalyzing = false;
-    public ?array $latestAiReply = null;
 
     public function simpan(): void
     {
@@ -45,11 +44,6 @@ class BukuHarian extends Component
             'confidence' => $result['confidence'] ?? 0,
             'is_analyzed' => true,
         ]);
-
-        $this->latestAiReply = [
-            'text' => $result['ai_reply'] ?? $this->fallbackReply(),
-            'saran' => $result['ai_saran'] ?? $this->fallbackSaran(),
-        ];
 
         $this->isAnalyzing = false;
         $this->newEntry = '';

@@ -15,7 +15,8 @@ class TukarPikiran extends Component
 {
     public string $newPost = '';
     public bool $showForm = false;
-    public ?int $replyingTo = null;
+    public ?int $replyingToPost = null;
+    public ?int $replyingToReply = null;
     public string $replyText = '';
 
     public function toggleForm(): void
@@ -93,31 +94,50 @@ class TukarPikiran extends Component
 
     public function startReply(int $postId): void
     {
-        $this->replyingTo = $this->replyingTo === $postId ? null : $postId;
+        $this->replyingToPost = $this->replyingToPost === $postId && $this->replyingToReply === null ? null : $postId;
+        $this->replyingToReply = null;
         $this->replyText = '';
     }
 
-    public function kirimBalasan(int $postId): void
+    public function startReplyToReply(int $postId, int $replyId): void
+    {
+        $this->replyingToPost = $postId;
+        $this->replyingToReply = $this->replyingToReply === $replyId ? null : $replyId;
+        $this->replyText = '';
+    }
+
+    public function kirimBalasan(int $postId, ?int $parentId = null): void
     {
         $this->validate([
             'replyText' => 'required|string|min:1|max:2000',
         ]);
 
+        if ($parentId !== null) {
+            ForumReply::where('post_id', $postId)->findOrFail($parentId);
+        }
+
         ForumReply::create([
-            'post_id' => $postId,
-            'user_id' => Auth::id(),
-            'konten'  => $this->replyText,
+            'post_id'   => $postId,
+            'user_id'   => Auth::id(),
+            'parent_id' => $parentId,
+            'konten'    => $this->replyText,
         ]);
 
         $this->replyText = '';
-        $this->replyingTo = null;
+        $this->replyingToPost = null;
+        $this->replyingToReply = null;
     }
 
     public function render()
     {
         $posts = ForumPost::where('is_hidden', false)
-            ->with(['user:id,username_anonim', 'replies.user:id,username_anonim', 'likes'])
-            ->withCount(['replies', 'likes'])
+            ->with([
+                'user:id,username_anonim',
+                'replies.user:id,username_anonim',
+                'replies.children.user:id,username_anonim',
+                'likes',
+            ])
+            ->withCount(['allReplies as replies_count', 'likes'])
             ->orderBy('created_at', 'desc')
             ->get();
 

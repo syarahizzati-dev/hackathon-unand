@@ -32,6 +32,7 @@ class AlertPanel extends Component
             'detail'         => 'Identitas dibuka karena deteksi risiko: ' . ($alert->cuplikan_teks ? mb_substr($alert->cuplikan_teks, 0, 80) : 'N/A'),
         ]);
 
+        $this->dispatch('activity-log-updated');
         $this->openedIdentities[$alertId] = true;
     }
 
@@ -59,6 +60,8 @@ class AlertPanel extends Component
             'actor_label'    => Auth::user()->nama ?? 'Admin',
             'detail'         => 'Alert telah ditindaklanjuti oleh admin',
         ]);
+
+        $this->dispatch('activity-log-updated');
     }
 
     public function render()
