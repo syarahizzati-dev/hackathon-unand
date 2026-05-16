@@ -9,7 +9,7 @@ git clone https://github.com/syarahizzati-dev/hackathon-unand.git
 ```
 
 ```bash
-cd campus-e
+cd hackathon-unand
 ```
 
 ---
@@ -43,12 +43,6 @@ php artisan key:generate
 ---
 
 # 4. Setup Database MySQL
-
-Buat database MySQL:
-
-```sql
-CREATE DATABASE campus_e;
-```
 
 Edit file `.env`:
 
