@@ -1,0 +1,72 @@
+@extends('layouts.mahasiswa')
+
+@section('banner')
+    @livewire('mahasiswa.self-check-banner')
+@endsection
+
+@section('content')
+    {{-- Kartu Sambutan --}}
+    <div class="bg-white rounded-xl border border-slate-200 p-6 mb-6 shadow-sm">
+        <h2 class="text-xl font-bold text-slate-800 mb-2">Selamat Datang! 👋</h2>
+        <p class="text-slate-500 text-sm leading-relaxed">
+            CAMPUS-E adalah sistem yang membantu kamu memantau kesehatan mental dengan aman dan anonim.
+        </p>
+    </div>
+
+    {{-- Statistik Singkat --}}
+    <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-6">
+        <div class="bg-white rounded-xl border border-slate-200 p-4 text-center shadow-sm hover:shadow-md transition-shadow">
+            <p class="text-2xl sm:text-3xl font-bold text-blue-700">30s</p>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">Self-check harian</p>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 p-4 text-center shadow-sm hover:shadow-md transition-shadow">
+            <p class="text-2xl sm:text-3xl font-bold text-blue-700">100%</p>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">Anonim & aman</p>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 p-4 text-center shadow-sm hover:shadow-md transition-shadow">
+            <p class="text-2xl sm:text-3xl font-bold text-blue-700">24/7</p>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">Tempat curhat aman</p>
+        </div>
+    </div>
+
+    {{-- Aktivitas Terakhir --}}
+    <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+        <h3 class="text-lg font-semibold text-slate-800 mb-4">Aktivitas Terakhir</h3>
+        <div class="space-y-3">
+            @php
+                $latestSelfCheck = Auth::user()->selfChecks()->latest()->first();
+                $latestDiary = Auth::user()->bukuHarian()->latest()->first();
+            @endphp
+
+            @if($latestSelfCheck)
+            <div class="flex items-center gap-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-green-500 flex-shrink-0"></span>
+                <div>
+                    <p class="text-sm font-medium text-slate-700">Self-check selesai</p>
+                    <p class="text-xs text-slate-400" x-data="{ time: '{{ $latestSelfCheck->created_at->isToday() ? 'Hari ini' : $latestSelfCheck->created_at->translatedFormat('l') }}, {{ $latestSelfCheck->created_at->format('H.i') }}' }" x-text="time"></p>
+                </div>
+            </div>
+            @endif
+
+            @if($latestDiary)
+            <div class="flex items-center gap-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-500 flex-shrink-0"></span>
+                <div>
+                    <p class="text-sm font-medium text-slate-700">Menulis Buku Harian</p>
+                    <p class="text-xs text-slate-400" x-data="{ time: '{{ $latestDiary->created_at->isToday() ? 'Hari ini' : $latestDiary->created_at->translatedFormat('l') }}, {{ $latestDiary->created_at->format('H.i') }}' }" x-text="time"></p>
+                </div>
+            </div>
+            @endif
+
+            @if(!$latestSelfCheck && !$latestDiary)
+            <div class="flex items-center gap-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-slate-300 flex-shrink-0"></span>
+                <div>
+                    <p class="text-sm font-medium text-slate-500">Belum ada aktivitas</p>
+                    <p class="text-xs text-slate-400">Mulai dengan self-check harian!</p>
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+@endsection

@@ -1,0 +1,9 @@
+@extends('layouts.mahasiswa')
+
+@section('banner')
+    @livewire('mahasiswa.self-check-banner')
+@endsection
+
+@section('content')
+    @livewire('mahasiswa.mood-tracker')
+@endsection
