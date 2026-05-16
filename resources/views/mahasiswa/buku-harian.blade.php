@@ -1,5 +1,9 @@
 @extends('layouts.mahasiswa')
 
+@section('banner')
+    @livewire('mahasiswa.self-check-banner')
+@endsection
+
 @section('content')
-    <p class="text-slate-500">Buku Harian — akan diimplementasikan di Fase 6.</p>
+    @livewire('mahasiswa.buku-harian')
 @endsection

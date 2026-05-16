@@ -45,9 +45,7 @@
 
     {{-- ═══ Banner Self-Check (slot) ═══ --}}
     @hasSection('banner')
-        <div class="w-full px-4 sm:px-6 lg:px-0 lg:max-w-5xl lg:mx-auto">
-            @yield('banner')
-        </div>
+        @yield('banner')
     @endif
 
     {{-- ═══ Tab Navigasi — Desktop: sticky bar, Mobile: fixed bottom ═══ --}}

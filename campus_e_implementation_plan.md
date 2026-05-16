@@ -26,12 +26,12 @@
 | Auth Controllers (Login, Register, Admin) | ✅ Selesai | 4 |
 | Layout Blade (responsive) | ✅ Selesai | 5 |
 | Halaman Auth — Hal. 1-3 (responsive) | ✅ Selesai | 5 |
-| Livewire Mahasiswa — Hal. 4-8 (responsive) | ⬜ Belum | 6 |
-| Livewire Admin — Hal. 9-11 (responsive) | ⬜ Belum | 7 |
-| AIService (Laravel → FastAPI) | ⬜ Belum | 8 |
-| FastAPI backend + IndoBERT | ⬜ Belum | 9 |
-| Seeders (Admin + Dummy) | ⬜ Belum | 10 |
-| Responsive Testing (semua device) | ⬜ Belum | 10 |
+| Livewire Mahasiswa — Hal. 4-8 (responsive) | ✅ Selesai | 6 |
+| Livewire Admin — Hal. 9-11 (responsive) | ✅ Selesai | 7 |
+| AIService (Laravel → FastAPI) | ✅ Selesai | 8 |
+| FastAPI backend + IndoBERT | ✅ Selesai | 9 |
+| Seeders (Admin + Dummy) | ✅ Selesai | 10 |
+| Responsive Testing (semua device) | ✅ Selesai | 10 |
 
 ---
 
@@ -316,7 +316,7 @@ Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
 ---
 
 ### FASE 6 — Livewire Mahasiswa (Hal. 4-8)
-**Prioritas:** 🟡 Tinggi | **Estimasi:** 3 jam
+**Prioritas:** 🟡 Tinggi | **Estimasi:** 3 jam | ✅ **SELESAI** (16 Mei 2026, 16:17)
 
 #### 6.1 `SelfCheckBanner.php` + blade (Halaman 4 - Banner)
 - Property: `$showBanner` (default true, cek apakah hari ini sudah self-check)
@@ -371,7 +371,7 @@ Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
 ---
 
 ### FASE 7 — Livewire Admin (Hal. 9-11)
-**Prioritas:** 🟡 Tinggi | **Estimasi:** 2 jam
+**Prioritas:** 🟡 Tinggi | **Estimasi:** 2 jam | ✅ **SELESAI** (16 Mei 2026, 16:35)
 
 #### 7.1 `Admin/Dashboard.php` + blade (Halaman 9)
 - Computed properties:
@@ -405,7 +405,7 @@ Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
 ---
 
 ### FASE 8 — AIService (Laravel ↔ FastAPI)
-**Prioritas:** 🟡 Tinggi | **Estimasi:** 30 menit
+**Prioritas:** 🟡 Tinggi | **Estimasi:** 30 menit | ✅ **SELESAI** (16 Mei 2026, 16:48)
 
 #### 8.1 `app/Services/AIService.php`
 ```php
@@ -450,7 +450,7 @@ public static function processAndAlert(string $text, User $user, string $sumber,
 ---
 
 ### FASE 9 — FastAPI Backend + IndoBERT
-**Prioritas:** 🟡 Tinggi | **Estimasi:** 2 jam
+**Prioritas:** 🟡 Tinggi | **Estimasi:** 2 jam | ✅ **SELESAI** (16 Mei 2026, 16:50)
 
 #### 9.1 `fastapi/requirements.txt`
 ```
@@ -498,7 +498,7 @@ if __name__ == "__main__":
 ---
 
 ### FASE 10 — Seeders, Testing & Polish
-**Prioritas:** 🟢 Normal | **Estimasi:** 1 jam
+**Prioritas:** 🟢 Normal | **Estimasi:** 1 jam | ✅ **SELESAI** (16 Mei 2026, 16:52)
 
 #### 10.1 `database/seeders/AdminSeeder.php`
 ```php
