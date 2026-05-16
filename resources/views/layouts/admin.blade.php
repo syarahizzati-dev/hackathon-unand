@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,6 +14,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
+
 <body class="font-['Inter',sans-serif] bg-slate-50 text-slate-900 antialiased min-h-screen flex flex-col">
 
     {{-- ═══ Header Sticky ═══ --}}
@@ -20,7 +22,8 @@
         <div class="w-full px-4 sm:px-6 lg:px-0 lg:max-w-5xl lg:mx-auto flex items-center justify-between h-16">
             {{-- Logo + Branding --}}
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-blue-800 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow">
+                <div
+                    class="w-10 h-10 bg-blue-800 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow">
                     C
                 </div>
                 <div class="hidden sm:block">
@@ -31,8 +34,7 @@
             </div>
 
             {{-- Real-time Clock --}}
-            <div class="hidden sm:flex items-center gap-2 text-sm text-slate-500"
-                 x-data="{
+            <div class="hidden sm:flex items-center gap-2 text-sm text-slate-500" x-data="{
                     waktu: '',
                     init() {
                         this.updateClock();
@@ -48,16 +50,18 @@
                         this.waktu = hari[now.getDay()] + ', ' + now.getDate() + ' ' + bulan[now.getMonth()] + ' ' + now.getFullYear() + ' • ' + h + '.' + m + '.' + s + ' WIB';
                     }
                  }">
-                <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
                 <span x-text="waktu" class="font-medium tabular-nums"></span>
             </div>
 
             {{-- Tombol Keluar --}}
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="flex items-center gap-2 text-sm text-slate-500 hover:text-red-600 transition-colors">
-                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+                <button type="submit"
+                    class="flex items-center gap-2 text-sm text-slate-500 hover:text-red-600 transition-colors">
+                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
                     </svg>
                     <span class="hidden sm:inline">Keluar</span>
                 </button>
@@ -79,9 +83,10 @@
         <div class="w-full px-4 sm:px-6 lg:px-0 lg:max-w-5xl lg:mx-auto flex items-center gap-1">
             @foreach ($tabs as $tab)
                 <a href="{{ route($tab['route']) }}" wire:navigate
-                   class="flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors
-                          {{ request()->routeIs($tab['route']) ? 'border-blue-700 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300' }}">
-                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">{!! $tab['icon'] !!}</svg>
+                    class="flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors
+                                  {{ request()->routeIs($tab['route']) ? 'border-blue-700 text-blue-700' : 'border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300' }}">
+                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor">{!! $tab['icon'] !!}</svg>
                     {{ $tab['label'] }}
                 </a>
             @endforeach
@@ -98,9 +103,10 @@
         <div class="flex items-center justify-around h-14">
             @foreach ($tabs as $tab)
                 <a href="{{ route($tab['route']) }}" wire:navigate
-                   class="flex flex-col items-center justify-center gap-0.5 flex-1 py-1
-                          {{ request()->routeIs($tab['route']) ? 'text-blue-700' : 'text-slate-400 hover:text-slate-600' }}">
-                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">{!! $tab['icon'] !!}</svg>
+                    class="flex flex-col items-center justify-center gap-0.5 flex-1 py-1
+                                  {{ request()->routeIs($tab['route']) ? 'text-blue-700' : 'text-slate-400 hover:text-slate-600' }}">
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.5" stroke="currentColor">{!! $tab['icon'] !!}</svg>
                     <span class="text-[10px] font-medium leading-tight">{{ explode(' ', $tab['label'])[0] }}</span>
                 </a>
             @endforeach
@@ -109,4 +115,5 @@
 
     @livewireScripts
 </body>
+
 </html>

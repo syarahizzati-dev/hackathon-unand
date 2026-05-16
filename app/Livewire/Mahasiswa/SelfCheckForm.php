@@ -27,11 +27,11 @@ class SelfCheckForm extends Component
 
     /** @var array<int, array{label: string, value: int, color: string, bg: string}> */
     public array $opsiJawaban = [
-        ['label' => 'Sangat Baik', 'value' => 5, 'color' => 'text-white', 'bg' => 'bg-emerald-600 hover:bg-emerald-700'],
-        ['label' => 'Baik',        'value' => 4, 'color' => 'text-white', 'bg' => 'bg-green-500 hover:bg-green-600'],
-        ['label' => 'Biasa',       'value' => 3, 'color' => 'text-white', 'bg' => 'bg-yellow-500 hover:bg-yellow-600'],
-        ['label' => 'Kurang',      'value' => 2, 'color' => 'text-white', 'bg' => 'bg-orange-500 hover:bg-orange-600'],
-        ['label' => 'Buruk',       'value' => 1, 'color' => 'text-white', 'bg' => 'bg-red-500 hover:bg-red-600'],
+        ['label' => 'Sangat Baik', 'value' => 5, 'color' => 'text-white', 'bg' => 'bg-[#00c950] hover:bg-[#00b046]'],
+        ['label' => 'Baik',        'value' => 4, 'color' => 'text-white', 'bg' => 'bg-[#05df72] hover:bg-[#04c766]'],
+        ['label' => 'Biasa',       'value' => 3, 'color' => 'text-white', 'bg' => 'bg-[#fdc700] hover:bg-[#e2b200]'],
+        ['label' => 'Kurang',      'value' => 2, 'color' => 'text-white', 'bg' => 'bg-[#ff8904] hover:bg-[#e57a03]'],
+        ['label' => 'Buruk',       'value' => 1, 'color' => 'text-white', 'bg' => 'bg-[#fb2c36] hover:bg-[#e02730]'],
     ];
 
     public function selectAnswer(int $question, int $value): void
