@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <title>CAMPUS-E — Dashboard Mahasiswa</title>
     <meta name="description" content="Dashboard mahasiswa CAMPUS-E untuk monitoring kesehatan mental.">
 
@@ -22,11 +23,9 @@
     <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
         <div class="w-full px-4 sm:px-6 lg:px-0 lg:max-w-5xl lg:mx-auto flex items-center justify-between h-16">
             {{-- Logo + Branding --}}
-            <div class="flex items-center gap-3">
-                <div
-                    class="w-10 h-10 bg-blue-800 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow">
-                    C
-                </div>
+            <div class="flex items-center gap-2 sm:gap-3">
+                <img src="{{ asset('images/logo-campus-e.png') }}" alt="CAMPUS-E Logo"
+                     class="w-8 h-8 sm:w-10 sm:h-10 object-contain flex-shrink-0" />
                 <div class="hidden sm:block">
                     <h1 class="text-lg font-bold text-slate-800 leading-tight">CAMPUS-E</h1>
                     <p class="text-xs text-slate-500 leading-tight">Dashboard Mahasiswa</p>

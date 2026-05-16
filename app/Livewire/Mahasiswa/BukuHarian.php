@@ -21,8 +21,8 @@ class BukuHarian extends Component
 
         // Simpan entri ke DB
         $entry = BukuHarianModel::create([
-            'user_id'     => Auth::id(),
-            'isi'         => $this->newEntry,
+            'user_id' => Auth::id(),
+            'isi' => $this->newEntry,
             'is_analyzed' => false,
         ]);
 
@@ -38,16 +38,16 @@ class BukuHarian extends Component
 
         // Update entri dengan hasil analisis
         $entry->update([
-            'ai_reply'    => $result['ai_reply'] ?? $this->fallbackReply(),
-            'ai_saran'    => $result['ai_saran'] ?? $this->fallbackSaran(),
-            'label'       => $result['label'] ?? 0,
-            'risk_level'  => $result['risk_level'] ?? 'LOW',
-            'confidence'  => $result['confidence'] ?? 0,
+            'ai_reply' => $result['ai_reply'] ?? $this->fallbackReply(),
+            'ai_saran' => $result['ai_saran'] ?? $this->fallbackSaran(),
+            'label' => $result['label'] ?? 0,
+            'risk_level' => $result['risk_level'] ?? 'LOW',
+            'confidence' => $result['confidence'] ?? 0,
             'is_analyzed' => true,
         ]);
 
         $this->latestAiReply = [
-            'text'  => $result['ai_reply'] ?? $this->fallbackReply(),
+            'text' => $result['ai_reply'] ?? $this->fallbackReply(),
             'saran' => $result['ai_saran'] ?? $this->fallbackSaran(),
         ];
 
