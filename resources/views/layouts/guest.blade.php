@@ -5,24 +5,31 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>CAMPUS-E — Sistem Prediksi Proaktif Risiko Depresi Mahasiswa</title>
+        <meta name="description" content="CAMPUS-E adalah sistem prediksi proaktif risiko depresi mahasiswa berbasis AI IndoBERT.">
 
-        <!-- Fonts -->
+        <!-- Fonts: Inter (sesuai Figma) -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
-                <a href="/" wire:navigate>
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
+    <body class="font-['Inter',sans-serif] text-slate-900 antialiased">
+        <div class="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6"
+             style="background-image: linear-gradient(150deg, #eff6ff 0%, #ffffff 50%, #eff6ff 100%);">
+
+            <!-- Logo + Branding -->
+            <div class="flex flex-col items-center mb-8">
+                <div class="w-[73px] h-[73px] mb-4 flex items-center justify-center bg-blue-800 rounded-xl text-white text-3xl font-bold shadow-lg">
+                    C
+                </div>
+                <h1 class="text-2xl sm:text-[30px] font-bold text-slate-800 leading-9 text-center">CAMPUS-E</h1>
+                <p class="text-slate-500 text-sm sm:text-base mt-1 text-center">Sistem Prediksi Proaktif Risiko Depresi Mahasiswa</p>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <!-- Form Card -->
+            <div class="w-full sm:max-w-md lg:max-w-lg bg-white border border-slate-200 rounded-xl shadow-sm p-6 sm:p-8">
                 {{ $slot }}
             </div>
         </div>

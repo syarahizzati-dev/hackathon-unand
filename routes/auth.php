@@ -4,13 +4,30 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
+/*
+|--------------------------------------------------------------------------
+| Auth Routes — CAMPUS-E
+|--------------------------------------------------------------------------
+|
+| Login mahasiswa:  GET  /          → pages.auth.login
+| Register:         GET  /register  → pages.auth.register
+| Login admin:      GET  /admin     → pages.auth.admin-login
+|
+*/
+
 Route::middleware('guest')->group(function () {
+    // ── Mahasiswa Auth ──
+    Volt::route('/', 'pages.auth.login')
+        ->name('login');
+
     Volt::route('register', 'pages.auth.register')
         ->name('register');
 
-    Volt::route('login', 'pages.auth.login')
-        ->name('login');
+    // ── Admin Auth ──
+    Volt::route('admin', 'pages.auth.admin-login')
+        ->name('admin.login');
 
+    // ── Password Reset ──
     Volt::route('forgot-password', 'pages.auth.forgot-password')
         ->name('password.request');
 

@@ -10,8 +10,8 @@ new #[Layout('layouts.guest')] class extends Component
     public LoginForm $form;
 
     /**
-     * Handle an incoming authentication request.
-     * Mahasiswa → /student-dashboard, Admin ditolak.
+     * Handle admin authentication request.
+     * Hanya user is_admin=true yang bisa login di sini.
      */
     public function login(): void
     {
@@ -19,18 +19,18 @@ new #[Layout('layouts.guest')] class extends Component
 
         $this->form->authenticate();
 
-        // Tolak admin login di halaman mahasiswa
-        if (auth()->user()->is_admin) {
+        // Tolak mahasiswa login di halaman admin
+        if (! auth()->user()->is_admin) {
             auth()->logout();
             Session::invalidate();
             Session::regenerateToken();
-            $this->addError('form.email', 'Akun admin tidak bisa login di sini. Gunakan halaman admin.');
+            $this->addError('form.email', 'Akun ini bukan akun admin.');
             return;
         }
 
         Session::regenerate();
 
-        $this->redirectIntended(default: route('mahasiswa.dashboard', absolute: false), navigate: true);
+        $this->redirect(route('admin.dashboard', absolute: false), navigate: true);
     }
 }; ?>
 
@@ -41,16 +41,16 @@ new #[Layout('layouts.guest')] class extends Component
     <form wire:submit="login">
         <!-- Email -->
         <div>
-            <label for="email" class="block text-sm font-medium text-slate-800 mb-2">Email</label>
+            <label for="admin-email" class="block text-sm font-medium text-slate-800 mb-2">Email</label>
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <svg class="w-5 h-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
                     </svg>
                 </div>
-                <input wire:model="form.email" id="email" type="email"
+                <input wire:model="form.email" id="admin-email" type="email"
                        class="block w-full pl-10 pr-4 py-3 border border-slate-200 rounded-lg text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                       placeholder="email@example.com" required autofocus autocomplete="username" />
+                       placeholder="admin@kampus.ac.id" required autofocus autocomplete="username" />
             </div>
             @error('form.email')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -59,14 +59,14 @@ new #[Layout('layouts.guest')] class extends Component
 
         <!-- Password -->
         <div class="mt-4" x-data="{ showPassword: false }">
-            <label for="password" class="block text-sm font-medium text-slate-800 mb-2">Password</label>
+            <label for="admin-password" class="block text-sm font-medium text-slate-800 mb-2">Password</label>
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <svg class="w-5 h-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
                     </svg>
                 </div>
-                <input wire:model="form.password" id="password"
+                <input wire:model="form.password" id="admin-password"
                        :type="showPassword ? 'text' : 'password'"
                        class="block w-full pl-10 pr-12 py-3 border border-slate-200 rounded-lg text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                        placeholder="Masukkan password" required autocomplete="current-password" />
@@ -91,13 +91,5 @@ new #[Layout('layouts.guest')] class extends Component
                 class="w-full mt-6 py-3 bg-blue-800 hover:bg-blue-900 text-white font-medium text-base rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
             Masuk
         </button>
-
-        <!-- Link Daftar -->
-        <p class="mt-4 text-center text-sm text-slate-500">
-            Belum punya akun?
-            <a href="{{ route('register') }}" wire:navigate class="text-blue-700 hover:text-blue-900 font-medium">
-                Daftar sekarang
-            </a>
-        </p>
     </form>
 </div>

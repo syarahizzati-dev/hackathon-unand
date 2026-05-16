@@ -9,12 +9,19 @@ use Symfony\Component\HttpFoundation\Response;
 class IsMahasiswa
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param  Closure(Request): (Response)  $next
+     * Hanya izinkan akses untuk mahasiswa (is_admin = false).
+     * Admin yang mengakses route mahasiswa akan diarahkan ke admin dashboard.
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if (! auth()->check()) {
+            return redirect('/');
+        }
+
+        if (auth()->user()->is_admin) {
+            return redirect('/admin-dashboard');
+        }
+
         return $next($request);
     }
 }
