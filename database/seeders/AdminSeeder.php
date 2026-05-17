@@ -17,7 +17,7 @@ class AdminSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'admin@kampus.ac.id'],
             [
-                'nama'           => 'Dr. Sarah Wijaya',
+                'nama'           => 'Admin Kampus',
                 'nim'            => null,
                 'email'          => 'admin@kampus.ac.id',
                 'no_telepon'     => '081234567800',
