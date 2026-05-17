@@ -150,6 +150,3 @@ CAMPUS-E didesain dengan memprioritaskan privasi penggunanya:
 - Identitas mahasiswa (Nama, NIM) **disembunyikan** (anonim) dari sesama pengguna maupun Admin pada kondisi normal.
 - Tombol **"Buka Identitas"** hanya tersedia untuk Admin jika AI mendeteksi *Alert Krisis* tingkat tinggi.
 - Setiap aktivitas pembukaan identitas darurat akan dicatat secara permanen di dalam **Log Aktivitas** dan tidak dapat dihapus (*append-only audit trail*).
-
----
-*Dibuat untuk Hackathon Universitas Andalas.*
