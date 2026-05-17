@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/favicon.ico" alt="CAMPUS-E Logo" width="100">
+  <img src="public/favicon.png" alt="CAMPUS-E Logo" width="100">
   <h1 align="center">CAMPUS-E</h1>
   <p align="center"><strong>Sistem Prediksi Risiko Depresi & Monitoring Kesehatan Mental Mahasiswa</strong></p>
 </p>
