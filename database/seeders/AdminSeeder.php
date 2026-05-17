@@ -29,22 +29,5 @@ class AdminSeeder extends Seeder
                 'is_admin'       => true,
             ]
         );
-
-        // Admin 2 — Konselor tambahan
-        User::updateOrCreate(
-            ['email' => 'konselor@kampus.ac.id'],
-            [
-                'nama'           => 'Dr. Budi Hartono',
-                'nim'            => null,
-                'email'          => 'konselor@kampus.ac.id',
-                'no_telepon'     => '081234567801',
-                'jurusan'        => null,
-                'program_studi'  => null,
-                'kontak_darurat' => null,
-                'password'       => Hash::make('admin123'),
-                'username_anonim' => 'Konselor',
-                'is_admin'       => true,
-            ]
-        );
     }
 }

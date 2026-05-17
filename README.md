@@ -8,7 +8,7 @@
 
 **CAMPUS-E** adalah sebuah platform aplikasi berbasis web inovatif yang bertujuan untuk membantu memantau dan memprediksi risiko depresi pada mahasiswa. Dengan mengutamakan privasi dan anonimitas, sistem ini menjadi ruang aman bagi mahasiswa untuk melakukan *self-check*, melacak mood harian, menulis buku harian (curhat), serta berinteraksi dalam forum tukar pikiran. 
 
-Sistem ini didukung oleh **Artificial Intelligence (AI)** menggunakan model bahasa **IndoBERT** melalui servis FastAPI, yang secara otomatis menganalisis teks curhatan mahasiswa untuk mendeteksi risiko depresi atau kecenderungan *suicide/self-harm* secara real-time. Jika terdeteksi risiko krisis, sistem akan memberikan **Alert Darurat** kepada Admin/Konselor kampus.
+Sistem ini didukung oleh **Artificial Intelligence (AI)** menggunakan model bahasa **IndoBERT** melalui servis FastAPI, yang secara otomatis menganalisis teks curhatan mahasiswa untuk mendeteksi risiko depresi atau kecenderungan *suicide/self-harm* secara real-time. Jika terdeteksi risiko krisis, sistem akan memberikan **Alert Darurat** kepada Admin kampus.
 
 ---
 
@@ -20,7 +20,7 @@ Sistem ini didukung oleh **Artificial Intelligence (AI)** menggunakan model baha
 - **Buku Harian AI:** Ruang curhat privat. AI akan memberikan respons empatik dan saran kegiatan berdasarkan analisis sentimen teks (IndoBERT).
 - **Forum Tukar Pikiran:** Ruang diskusi aman dan anonim untuk saling mendukung sesama mahasiswa.
 
-### 👨‍⚕️ Portal Admin & Konselor
+### 👨‍⚕️ Portal Admin
 - **Dashboard Statistik:** Visualisasi tren kondisi mental mahasiswa (Zona Aman, Waspada, Kritis).
 - **Alert Krisis Real-time:** Notifikasi seketika jika sistem mendeteksi kata kunci berbahaya/kritis dari curhatan mahasiswa.
 - **Sistem Buka Identitas Darurat:** Fitur *break-glass* untuk membuka identitas mahasiswa berisiko tinggi guna penanganan darurat.
@@ -136,7 +136,6 @@ Setelah melakukan `migrate:fresh --seed`, Anda dapat menggunakan akun berikut un
 | Role | Email | Password |
 |---|---|---|
 | **Admin** | `admin@kampus.ac.id` | `admin123` |
-| **Konselor** | `konselor@kampus.ac.id` | `admin123` |
 | **Mahasiswa 1** | `mahasiswa1@test.com` | `password123` |
 | **Mahasiswa 2** | `mahasiswa2@test.com` | `password123` |
 
