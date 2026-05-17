@@ -4,7 +4,7 @@
 
     @if(!$isComplete)
     {{-- ═══ Header ═══ --}}
-    <div class="p-6 pb-4">
+    <div class="p-5 sm:p-6 pb-4">
         <h2 class="text-xl font-bold text-slate-800">Self-check Harian</h2>
         <p class="text-sm text-slate-500 mt-1">Pertanyaan {{ $currentQuestion }} dari 5</p>
 
@@ -16,20 +16,20 @@
     </div>
 
     {{-- ═══ Pertanyaan ═══ --}}
-    <div class="px-6 pb-2">
+    <div class="px-5 sm:px-6 pb-2">
         <p class="text-lg font-medium text-slate-800 leading-relaxed">
             {{ $pertanyaan[$currentQuestion]['teks'] }}
         </p>
     </div>
 
     {{-- ═══ Pilihan Jawaban ═══ --}}
-    <div class="px-6 pb-6 space-y-3 mt-2">
+    <div class="px-5 sm:px-6 pb-6 space-y-3 mt-2">
         @foreach($opsiJawaban as $opsi)
         <button wire:click="selectAnswer({{ $currentQuestion }}, {{ $opsi['value'] }})"
                 class="w-full {{ $opsi['bg'] }} {{ $opsi['color'] }} font-medium py-3.5 px-5 rounded-xl
                        transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]
                        shadow-sm hover:shadow-md text-left flex items-center justify-between group min-h-[44px]">
-            <span>{{ $opsi['label'] }}</span>
+            <span class="break-words">{{ $opsi['label'] }}</span>
             <svg class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
             </svg>
@@ -38,14 +38,14 @@
     </div>
 
     {{-- ═══ Indikator Pertanyaan ═══ --}}
-    <div class="px-6 pb-6 flex items-center justify-center gap-2">
+    <div class="px-5 sm:px-6 pb-6 flex items-center justify-center gap-2">
         @for($i = 1; $i <= 5; $i++)
         <div class="w-2.5 h-2.5 rounded-full transition-all duration-300 {{ $i < $currentQuestion ? 'bg-blue-700' : ($i === $currentQuestion ? 'bg-blue-700 ring-2 ring-blue-200 scale-125' : 'bg-slate-200') }}"></div>
         @endfor
     </div>
 
     @if($readyToSubmit)
-    <div class="px-6 pb-6">
+    <div class="px-5 sm:px-6 pb-6">
         <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-3">
             <p class="text-sm font-medium text-blue-800">Semua jawaban sudah terisi.</p>
             <p class="text-xs text-blue-600 mt-1">Tekan tombol kirim untuk menyimpan self-check dan memperbarui mood tracker.</p>
@@ -59,7 +59,7 @@
 
     @else
     {{-- ═══ Layar Selesai ═══ --}}
-    <div class="p-8 text-center" x-data x-transition:enter="transition ease-out duration-500"
+    <div class="p-6 sm:p-8 text-center" x-data x-transition:enter="transition ease-out duration-500"
          x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100">
         <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg class="w-10 h-10 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">

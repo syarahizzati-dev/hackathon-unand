@@ -27,16 +27,50 @@
                     <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold {{ $log->severity === 'kritis' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700' }}">{{ strtoupper($log->severity) }}</span>
                     @endif
                 </div>
-                <p class="text-sm text-slate-700 leading-relaxed">{{ $log->detail }}</p>
+                <p class="text-sm text-slate-700 leading-relaxed break-words">{{ $log->detail }}</p>
+
+                {{-- Detail konteks dari alert terkait --}}
+                @if($log->alert)
+                <div class="mt-2.5 flex flex-wrap items-center gap-2">
+                    {{-- Sumber deteksi --}}
+                    @php
+                        $sumberConfig = match($log->alert->sumber ?? '') {
+                            'buku_harian'  => ['label' => 'Buku Harian', 'bg' => 'bg-blue-50 text-blue-600 border-blue-100', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/>'],
+                            'forum_post'   => ['label' => 'Forum', 'bg' => 'bg-purple-50 text-purple-600 border-purple-100', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"/>'],
+                            'self_check'   => ['label' => 'Self-Check', 'bg' => 'bg-green-50 text-green-600 border-green-100', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>'],
+                            default        => ['label' => $log->alert->sumber ?? '-', 'bg' => 'bg-slate-50 text-slate-500 border-slate-100', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/>'],
+                        };
+                    @endphp
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border {{ $sumberConfig['bg'] }}">
+                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">{!! $sumberConfig['icon'] !!}</svg>
+                        {{ $sumberConfig['label'] }}
+                    </span>
+
+                    {{-- Kata kunci --}}
+                    @if($log->alert->kata_kunci && count($log->alert->kata_kunci) > 0)
+                        @foreach($log->alert->kata_kunci as $kw)
+                        <span class="inline-block bg-red-50 text-red-600 text-xs px-2 py-0.5 rounded-full border border-red-100">"{{ $kw }}"</span>
+                        @endforeach
+                    @endif
+                </div>
+                @endif
+
+                {{-- Metadata --}}
                 <div class="flex items-center gap-3 mt-2 text-xs text-slate-400 flex-wrap">
                     <span class="flex items-center gap-1">
                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
                         {{ $log->created_at->translatedFormat('d M Y') }}, {{ $log->created_at->format('H.i') }}
                     </span>
                     @if($log->targetUser)
-                    <span>{{ $log->targetUser->username_anonim ?? ('STD-' . str_pad($log->target_user_id, 4, '0', STR_PAD_LEFT)) }}</span>
+                    <span class="flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
+                        {{ $log->targetUser->username_anonim ?? ('STD-' . str_pad($log->target_user_id, 4, '0', STR_PAD_LEFT)) }}
+                    </span>
                     @endif
-                    <span>Oleh: {{ $log->actor_label ?? ($log->actor ? $log->actor->nama : 'Sistem') }}</span>
+                    <span class="flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+                        Oleh: {{ $log->actor_label ?? ($log->actor ? $log->actor->nama : 'Sistem') }}
+                    </span>
                 </div>
             </div>
         </div>

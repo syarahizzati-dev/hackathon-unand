@@ -11,6 +11,11 @@ class AlertPanel extends Component
 {
     public array $openedIdentities = [];
 
+    // ─── Modal State ─────────────────────────────────────────
+    public bool $showHandleModal = false;
+    public ?int $handlingAlertId = null;
+    public string $catatanTindakLanjut = '';
+
     public function openIdentity(int $alertId): void
     {
         $alert = Alert::findOrFail($alertId);
@@ -41,16 +46,48 @@ class AlertPanel extends Component
         unset($this->openedIdentities[$alertId]);
     }
 
-    public function handleAlert(int $alertId): void
+    /**
+     * Buka modal konfirmasi tindak lanjut.
+     */
+    public function openHandleModal(int $alertId): void
     {
-        $alert = Alert::findOrFail($alertId);
+        $this->handlingAlertId = $alertId;
+        $this->catatanTindakLanjut = '';
+        $this->resetValidation();
+        $this->showHandleModal = true;
+    }
+
+    /**
+     * Tutup modal tanpa aksi.
+     */
+    public function closeHandleModal(): void
+    {
+        $this->showHandleModal = false;
+        $this->handlingAlertId = null;
+        $this->catatanTindakLanjut = '';
+        $this->resetValidation();
+    }
+
+    /**
+     * Konfirmasi tindak lanjut — simpan ke DB dengan catatan admin.
+     */
+    public function confirmHandle(): void
+    {
+        $this->validate([
+            'catatanTindakLanjut' => 'required|string|min:5|max:1000',
+        ], [
+            'catatanTindakLanjut.required' => 'Catatan tindak lanjut wajib diisi.',
+            'catatanTindakLanjut.min'      => 'Catatan minimal 5 karakter.',
+        ]);
+
+        $alert = Alert::findOrFail($this->handlingAlertId);
 
         $alert->is_handled = true;
         $alert->handled_by = Auth::id();
         $alert->handled_at = now();
         $alert->save();
 
-        // Log aktivitas
+        // Log aktivitas dengan catatan spesifik dari admin
         ActivityLog::create([
             'aksi'           => 'alert_ditindaklanjuti',
             'severity'       => $alert->label >= 4 ? 'kritis' : 'waspada',
@@ -58,8 +95,15 @@ class AlertPanel extends Component
             'target_user_id' => $alert->user_id,
             'actor_id'       => Auth::id(),
             'actor_label'    => Auth::user()->nama ?? 'Admin',
-            'detail'         => 'Alert telah ditindaklanjuti oleh admin',
+            'detail'         => $this->catatanTindakLanjut,
         ]);
+
+        // Bersihkan state
+        unset($this->openedIdentities[$this->handlingAlertId]);
+        $this->closeHandleModal();
+
+        // Notifikasi sukses
+        session()->flash('alert-success', 'Berhasil ditindaklanjuti.');
 
         $this->dispatch('activity-log-updated');
     }

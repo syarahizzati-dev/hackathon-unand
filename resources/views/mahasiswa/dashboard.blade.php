@@ -6,7 +6,7 @@
 
 @section('content')
     {{-- Kartu Sambutan --}}
-    <div class="bg-white rounded-xl border border-slate-200 p-6 mb-6 shadow-sm">
+    <div class="bg-white rounded-xl border border-slate-200 p-5 sm:p-6 mb-6 shadow-sm">
         <h2 class="text-xl font-bold text-slate-800 mb-2">Selamat Datang! 👋</h2>
         <p class="text-slate-500 text-sm leading-relaxed">
             CAMPUS-E adalah sistem yang membantu kamu memantau kesehatan mental dengan aman dan anonim.
@@ -14,7 +14,7 @@
     </div>
 
     {{-- Statistik Singkat --}}
-    <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-6">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
         <div class="bg-white rounded-xl border border-slate-200 p-4 text-center shadow-sm hover:shadow-md transition-shadow">
             <p class="text-2xl sm:text-3xl font-bold text-blue-700">30s</p>
             <p class="text-xs sm:text-sm text-slate-500 mt-1">Self-check harian</p>
@@ -30,7 +30,7 @@
     </div>
 
     {{-- Aktivitas Terakhir --}}
-    <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+    <div class="bg-white rounded-xl border border-slate-200 p-5 sm:p-6 shadow-sm">
         <h3 class="text-lg font-semibold text-slate-800 mb-4">Aktivitas Terakhir</h3>
         <div class="space-y-3">
             @php

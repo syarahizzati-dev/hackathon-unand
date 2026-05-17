@@ -286,26 +286,59 @@ PROMPT;
     {
         $normalized = $this->normalizeText($text);
 
+        // ─── Safe Context: Pola yang menandakan teks BUKAN berbahaya ───
         $safeContextPatterns = [
+            // Benda mati
+            '/\b(hp|handphone|ponsel|laptop|komputer|wifi|lampu|mesin|motor|mobil|ac|tv|baterai|batere|server) mati\b/u',
+            '/\bmati (gaya|rasa|kutu|lampu|listrik|sinyal|total)\b/u',
+
+            // Aktivitas fisik aman
             '/\bmain lompat tali\b/u',
             '/\blompat (jauh|tinggi)\b/u',
             '/\bterjun payung\b/u',
-            '/\bterjun ke kolam\b/u',
-            '/\b(hp|handphone|ponsel|laptop|komputer|wifi|lampu|mesin|motor|mobil) mati\b/u',
-            '/\bmati gaya\b/u',
+            '/\bterjun ke (kolam|air|laut)\b/u',
+
+            // Medis normal
             '/\bminum obat (dokter|resep)\b/u',
-            '/\bobat (dokter|resep)\b/u',
+            '/\bobat (dokter|resep|flu|batuk|sakit kepala|demam|maag)\b/u',
+
+            // Digital/akademik
             '/\bend (meeting|kelas|semester|sesi|zoom|call)\b/u',
             '/\blogout (akun|aplikasi|email|instagram|ig|whatsapp|wa)\b/u',
             '/\bgame over main\b/u',
             '/\bngilangin (file|data|foto|chat|pesan)\b/u',
+
+            // ─── Hiperbola Indonesia: "X kayak/sampe mau mati" ───
+            // Pola: [kata sifat fisik] + [connector opsional] + [mau/pengen] + mati
+            '/\b(ngantuk|kantuk|ngantukan|sleepy)\b.*\b(mau|pengen|kayak|kaya|sampe|sampai|ampir|hampir)?\s*(mati|mampus)\b/u',
+            '/\b(capek|cape|capai|kecapekan|kecapean|lelah|penat|exhausted)\b.*\b(mau|pengen|kayak|kaya|sampe|sampai|ampir|hampir)?\s*(mati|mampus)\b/u',
+            '/\b(lapar|laper|kelaparan|hungry)\b.*\b(mau|pengen|kayak|kaya|sampe|sampai|ampir|hampir)?\s*(mati|mampus)\b/u',
+            '/\b(bosan|bosen|boring|bete|bt)\b.*\b(mau|pengen|kayak|kaya|sampe|sampai|ampir|hampir)?\s*(mati|mampus)\b/u',
+            '/\b(panas|gerah|kepanasan)\b.*\b(mau|pengen|kayak|kaya|sampe|sampai|ampir|hampir)?\s*(mati|mampus)\b/u',
+            '/\b(dingin|kedinginan|beku)\b.*\b(mau|pengen|kayak|kaya|sampe|sampai|ampir|hampir)?\s*(mati|mampus)\b/u',
+            '/\b(haus|kehausan)\b.*\b(mau|pengen|kayak|kaya|sampe|sampai|ampir|hampir)?\s*(mati|mampus)\b/u',
+            '/\b(deg degan|nervous|grogi)\b.*\b(mau|pengen|kayak|kaya|sampe|sampai|ampir|hampir)?\s*(mati|mampus)\b/u',
+            '/\b(malu|malu banget|embarrassed)\b.*\b(mau|pengen|kayak|kaya|sampe|sampai|ampir|hampir)?\s*(mati|mampus)\b/u',
+            '/\b(seneng|senang|happy|bahagia)\b.*\b(mau|pengen|kayak|kaya|sampe|sampai|ampir|hampir)?\s*(mati|mampus)\b/u',
+
+            // Konteks akademik/lucu + mau mati (hiperbola)
+            '/\b(ujian|tugas|deadline|uts|uas|skripsi|sidang|presentasi|kuis|quiz)\b.*\b(mau|pengen|kayak|kaya|sampe|sampai)?\s*(mati|mampus)\b/u',
+            '/\b(mager|males)\b.*\b(mau|pengen|kayak|kaya|sampe|sampai)?\s*(mati|mampus)\b/u',
+            '/\b(lucu|ngakak|ketawa|kocak|gokil)\b.*\b(mau|pengen|kayak|kaya|sampe|sampai)?\s*(mati|mampus)\b/u',
+            '/\b(kaget|shock|syok)\b.*\b(mau|pengen|kayak|kaya|sampe|sampai)?\s*(mati|mampus)\b/u',
+
+            // Pola terbalik: "mau mati" + [karena/gara-gara] + [kata sifat fisik/akademik]
+            '/\b(mau|pengen|kayak|kaya)\s*(mati|mampus)\b.*\b(ngantuk|capek|cape|lapar|laper|bosan|bosen|panas|dingin|haus|malu|grogi|nervous|ujian|tugas|deadline|mager|males|lucu|kaget)\b/u',
+
+            // Frasa langsung: "kayak mau mati" / "sampe mau mati" didahului konteks fisik
+            '/\b(ngantuk|capek|cape|lapar|laper|bosan|bosen|panas|dingin|haus|malu|deg degan|seneng|senang|mager|males)\s+(banget|bgt|parah|poll|pol|amet|amat|sekali)\s*(kayak|kaya|sampe|sampai)?\s*(mau|pengen)?\s*(mati|mampus)\b/u',
         ];
 
         $hasSafeContext = $this->matchesAnyPattern($normalized, $safeContextPatterns);
 
-        $criticalPhrases = [
+        // ─── Frasa yang SELALU kritis (tidak bisa di-override oleh safe context) ───
+        $alwaysCriticalPhrases = [
             'mau bunuh diri', 'ingin bunuh diri', 'pengen bunuh diri', 'kepikiran bunuh diri', 'bunuh diri',
-            'mau mati', 'ingin mati', 'pengen mati', 'rasanya mau mati', 'lebih baik mati',
             'akhiri hidup', 'mengakhiri hidup', 'mengakhiri semuanya', 'tidak ingin hidup', 'tidak mau hidup',
             'gak mau hidup', 'ga mau hidup', 'nggak mau hidup', 'tidak pengen hidup', 'gak pengen hidup',
             'menyakiti diri', 'nyakitin diri', 'melukai diri', 'self harm', 'suicide',
@@ -314,6 +347,12 @@ PROMPT;
             'pengen ngilang dari bumi', 'pengen hilang dari bumi', 'gantung diri', 'bye dunia',
             'selamat tinggal dunia', 'pamitan dari dunia', 'cabut dari dunia',
         ];
+
+        // Frasa ini SELALU kritis — safe context tidak bisa override
+        if ($this->containsAny($normalized, $alwaysCriticalPhrases)) {
+            return ['label' => 4, 'confidence' => 0.98, 'match' => 'critical_phrase'];
+        }
+
         $criticalMethodPatterns = [
             '/\b(mau|ingin|pengen|kepikiran|rasanya mau|rasanya pengen)\s+(lompat|loncat|terjun)\s+dari\s+(gedung|jembatan|lantai|atap|balkon|ketinggian)\b/u',
             '/\b(mau|ingin|pengen|kepikiran)\s+(minum|makan)\s+(racun|obat banyak|banyak obat)\b/u',
@@ -323,6 +362,28 @@ PROMPT;
             '/\bsemoga\s+(tidak|gak|ga|nggak)\s+bangun lagi\b/u',
             '/\b(pengen|ingin|mau)\s+(tidak|gak|ga|nggak)\s+bangun lagi\b/u',
         ];
+
+        // Method patterns juga selalu kritis
+        if ($this->matchesAnyPattern($normalized, $criticalMethodPatterns)) {
+            return ['label' => 4, 'confidence' => 0.97, 'match' => 'critical_method'];
+        }
+
+        // ─── Safe context OVERRIDE: jika teks mengandung hiperbola, turunkan ke aman ───
+        // Frasa ambigu seperti "mau mati", "pengen mati" — bisa hiperbola ATAU serius
+        // Safe context harus dicek SEBELUM frasa ini di-flag kritis
+        $ambiguousCriticalPhrases = [
+            'mau mati', 'ingin mati', 'pengen mati', 'rasanya mau mati', 'lebih baik mati',
+        ];
+
+        if ($this->containsAny($normalized, $ambiguousCriticalPhrases)) {
+            if ($hasSafeContext) {
+                // Hiperbola terdeteksi — turunkan ke MEDIUM (bukan 0, tetap pantau)
+                return ['label' => 1, 'confidence' => 0.60, 'match' => 'hyperbole_safe'];
+            }
+            // Tidak ada konteks aman — tetap kritis
+            return ['label' => 4, 'confidence' => 0.95, 'match' => 'critical_phrase_ambiguous'];
+        }
+
         $highPhrases = [
             'tidak kuat lagi', 'ga kuat lagi', 'gak kuat lagi', 'nggak kuat lagi', 'capek hidup',
             'hidup tidak ada artinya', 'hidup ga ada artinya', 'hidup gak ada artinya', 'aku beban',
@@ -334,7 +395,23 @@ PROMPT;
             'cuma beban', 'hanya beban', 'jadi beban', 'tidak punya alasan buat lanjut',
             'tidak punya alasan untuk lanjut', 'hidup rasanya kosong banget', 'tidak dibutuhkan siapa siapa',
             'capek sama semuanya', 'lelah sama semuanya',
+            // Gen Z additions
+            'males hidup', 'muak hidup', 'muak sama hidup', 'udah tidak kuat', 'sudah tidak kuat',
+            'tidak bisa lanjut', 'gabisa lanjut', 'pengen tidur panjang', 'capek banget sama hidup',
+            'hidup gini doang', 'buat apa hidup', 'ngapain hidup', 'ngapain masih hidup',
+            'saya worthless', 'aku worthless', 'hidup hampa', 'kosong banget',
+            'udah ga kuat', 'udh ga kuat', 'udah gak kuat', 'udh gak kuat',
         ];
+
+        if ($this->containsAny($normalized, $highPhrases)) {
+            return ['label' => 3, 'confidence' => 0.92, 'match' => 'high_phrase'];
+        }
+
+        // Safe context tanpa frasa bahaya — pasti aman
+        if ($hasSafeContext) {
+            return ['label' => 0, 'confidence' => 0.15, 'match' => 'safe_context'];
+        }
+
         $mediumPhrases = [
             'cemas', 'khawatir', 'panik', 'overthinking', 'menangis terus', 'sering menangis',
             'tidak bisa tidur', 'susah tidur', 'sendirian', 'kesepian', 'tertekan', 'stress berat', 'stres berat',
@@ -342,23 +419,15 @@ PROMPT;
             'kepala mau meledak', 'overload pikiran', 'murung', 'suasana hati buruk', 'menangis',
             'mental breakdown', 'bad day streak', 'chaos internal', 'overwhelmed parah', 'mode survival',
             'otak lowbat', 'otak lagi lowbat',
+            // Gen Z additions
+            'numb', 'mati rasa', 'dissociating', 'disasosiasi', 'emotional damage',
+            'broken', 'aku broken', 'saya broken', 'drained', 'emotionally drained',
+            'triggered', 'trauma', 'traumatized', 'butuh healing', 'mental zonk',
+            'aku ga oke', 'saya tidak oke', 'not okay', 'aku not okay',
+            'insecure', 'insecure banget', 'self doubt', 'kepikiran terus',
+            'gabisa fokus', 'tidak bisa fokus', 'pikiran kacau', 'hati hancur',
+            'patah hati', 'sakit hati', 'kecewa berat', 'frustasi', 'frustrasi',
         ];
-
-        if ($this->containsAny($normalized, $criticalPhrases)) {
-            return ['label' => 4, 'confidence' => 0.98, 'match' => 'critical_phrase'];
-        }
-
-        if ($this->matchesAnyPattern($normalized, $criticalMethodPatterns)) {
-            return ['label' => 4, 'confidence' => 0.97, 'match' => 'critical_method'];
-        }
-
-        if ($this->containsAny($normalized, $highPhrases)) {
-            return ['label' => 3, 'confidence' => 0.92, 'match' => 'high_phrase'];
-        }
-
-        if ($hasSafeContext) {
-            return ['label' => 0, 'confidence' => 0.15, 'match' => 'safe_context'];
-        }
 
         if ($this->containsAny($normalized, $mediumPhrases)) {
             return ['label' => 2, 'confidence' => 0.86, 'match' => 'medium_phrase'];
@@ -405,9 +474,39 @@ PROMPT;
             'down banget' => 'sangat sedih',
             'lagi down' => 'sedang sedih',
             'nangis mulu' => 'menangis terus',
+            'nangis terus' => 'menangis terus',
             'ga bisa tidur' => 'tidak bisa tidur',
             'gak bisa tidur' => 'tidak bisa tidur',
             'g bisa tidur' => 'tidak bisa tidur',
+            'gabisa tidur' => 'tidak bisa tidur',
+            // Gen Z phrase additions
+            'males hidup' => 'capek hidup',
+            'males idup' => 'capek hidup',
+            'muak sama hidup' => 'capek hidup',
+            'muak hidup' => 'capek hidup',
+            'buat apa hidup' => 'hidup tidak ada artinya',
+            'ngapain hidup' => 'hidup tidak ada artinya',
+            'ngapain masih hidup' => 'hidup tidak ada artinya',
+            'hidup gini doang' => 'hidup tidak ada artinya',
+            'gabisa lanjut' => 'tidak bisa lanjut',
+            'ga bisa lanjut' => 'tidak bisa lanjut',
+            'gak bisa lanjut' => 'tidak bisa lanjut',
+            'udah ga kuat' => 'tidak kuat lagi',
+            'udh ga kuat' => 'tidak kuat lagi',
+            'udah gak kuat' => 'tidak kuat lagi',
+            'udh gak kuat' => 'tidak kuat lagi',
+            'aku ga oke' => 'aku tidak oke',
+            'gw ga oke' => 'saya tidak oke',
+            'gue ga oke' => 'saya tidak oke',
+            'i am not okay' => 'saya tidak oke',
+            'im not okay' => 'saya tidak oke',
+            'not okay' => 'tidak oke',
+            'aku broken' => 'saya broken',
+            'hati hancur' => 'patah hati',
+            'mental zonk' => 'lelah mental',
+            'otak zonk' => 'lelah mental',
+            'emotionally drained' => 'lelah mental',
+            'emotional damage' => 'lelah mental',
         ];
 
         foreach ($phraseReplacements as $from => $to) {
@@ -441,12 +540,34 @@ PROMPT;
             'gakwad' => 'tidak kuat',
             'gasanggup' => 'tidak sanggup',
             'gamampu' => 'tidak mampu',
+            'gamau' => 'tidak mau',
+            'gmau' => 'tidak mau',
+            'gabisa' => 'tidak bisa',
+            'gbisa' => 'tidak bisa',
+            'gaada' => 'tidak ada',
+            'gada' => 'tidak ada',
+            'gatau' => 'tidak tahu',
+            'gtau' => 'tidak tahu',
             'ngga' => 'nggak',
             'ngak' => 'nggak',
             'tdk' => 'tidak',
             'tak' => 'tidak',
+            'udh' => 'sudah',
+            'udah' => 'sudah',
+            'uda' => 'sudah',
+            'bgt' => 'banget',
+            'bngt' => 'banget',
+            'bngtt' => 'banget',
+            'krn' => 'karena',
+            'karna' => 'karena',
+            'krna' => 'karena',
+            'emg' => 'memang',
+            'emang' => 'memang',
             'bunuhdiri' => 'bunuh diri',
             'cape' => 'capek',
+            'cpk' => 'capek',
+            'cpek' => 'capek',
+            'nangis' => 'menangis',
             'anxiety' => 'cemas',
             'anxious' => 'cemas',
             'ovt' => 'overthinking',
@@ -459,7 +580,16 @@ PROMPT;
             'moody' => 'murung',
             'down' => 'sedih',
             'useless' => 'tidak berguna',
+            'worthless' => 'tidak berguna',
             'hopeless' => 'putus asa',
+            'numb' => 'mati rasa',
+            'drained' => 'lelah mental',
+            'broken' => 'broken',
+            'triggered' => 'triggered',
+            'trauma' => 'trauma',
+            'traumatized' => 'trauma',
+            'insecure' => 'insecure',
+            'frustasi' => 'frustrasi',
         ];
 
         foreach ($replacements as $from => $to) {

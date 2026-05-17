@@ -73,7 +73,7 @@
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 sm:p-6">
             <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-4">Tren Minggu Ini</h3>
             <div class="space-y-4">
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div class="flex items-center gap-3">
                         <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center"><svg class="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></div>
                         <span class="text-sm text-slate-600">Self-check completion</span>
@@ -82,7 +82,7 @@
                         {{ $selfCheckTrend['direction'] === 'up' ? '+' : '-' }}{{ $selfCheckTrend['value'] }}%
                     </span>
                 </div>
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div class="flex items-center gap-3">
                         <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center"><svg class="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/></svg></div>
                         <span class="text-sm text-slate-600">Buku harian sessions</span>
@@ -91,7 +91,7 @@
                         {{ $diaryTrend['direction'] === 'up' ? '+' : '-' }}{{ $diaryTrend['value'] }}%
                     </span>
                 </div>
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div class="flex items-center gap-3">
                         <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center"><svg class="w-4 h-4 text-purple-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"/></svg></div>
                         <span class="text-sm text-slate-600">Forum posts</span>

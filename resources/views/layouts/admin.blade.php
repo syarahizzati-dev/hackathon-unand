@@ -20,7 +20,7 @@
 
     {{-- ═══ Header Sticky ═══ --}}
     <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
-        <div class="w-full px-4 sm:px-6 lg:px-0 lg:max-w-5xl lg:mx-auto flex items-center justify-between h-16">
+        <div class="w-full px-4 sm:px-6 lg:px-0 lg:max-w-6xl xl:max-w-7xl lg:mx-auto flex items-center justify-between h-16">
             {{-- Logo + Branding --}}
             <div class="flex items-center gap-2 sm:gap-3">
                 <img src="{{ asset('images/logo-campus-e.png') }}" alt="CAMPUS-E Logo"
@@ -79,7 +79,7 @@
 
     {{-- Desktop tabs --}}
     <nav class="hidden md:block sticky top-16 z-40 bg-white border-b border-slate-200">
-        <div class="w-full px-4 sm:px-6 lg:px-0 lg:max-w-5xl lg:mx-auto flex items-center gap-1">
+        <div class="w-full px-4 sm:px-6 lg:px-0 lg:max-w-6xl xl:max-w-7xl lg:mx-auto flex items-center gap-1">
             @foreach ($tabs as $tab)
                 <a href="{{ route($tab['route']) }}" wire:navigate
                     class="flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors
@@ -93,12 +93,12 @@
     </nav>
 
     {{-- ═══ Main Content ═══ --}}
-    <main class="flex-1 w-full px-4 sm:px-6 lg:px-0 lg:max-w-5xl lg:mx-auto py-6 pb-24 md:pb-6">
+    <main class="flex-1 w-full px-4 sm:px-6 lg:px-0 lg:max-w-6xl xl:max-w-7xl lg:mx-auto py-5 sm:py-6 pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-6">
         @yield('content')
     </main>
 
     {{-- Mobile bottom tab bar --}}
-    <nav class="md:hidden fixed bottom-0 inset-x-0 z-50 bg-white border-t border-slate-200 safe-area-bottom">
+    <nav class="md:hidden fixed bottom-0 inset-x-0 z-50 bg-white border-t border-slate-200 pb-[env(safe-area-inset-bottom)] safe-area-bottom">
         <div class="flex items-center justify-around h-14">
             @foreach ($tabs as $tab)
                 <a href="{{ route($tab['route']) }}" wire:navigate

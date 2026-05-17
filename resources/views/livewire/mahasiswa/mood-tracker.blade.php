@@ -1,7 +1,7 @@
 <div class="space-y-6" wire:key="mood-tracker">
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-5 sm:p-6">
-            <div class="flex items-center justify-between mb-6">
+        <div class="p-4 sm:p-6">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
                 <h2 class="text-lg sm:text-xl font-bold text-slate-800">Mood Tracker</h2>
                 <div class="flex items-center gap-2">
                     <button wire:click="previousMonth" class="p-2 rounded-lg hover:bg-slate-100 transition-colors text-slate-500">

@@ -35,6 +35,14 @@ new #[Layout('layouts.guest')] class extends Component
 }; ?>
 
 <div>
+    <div class="mb-6">
+        <span class="inline-flex items-center rounded-full bg-red-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-red-700 ring-1 ring-red-100">
+            Portal Admin
+        </span>
+        <h2 class="mt-4 text-2xl font-bold tracking-tight text-slate-900">Panel monitoring krisis</h2>
+        <p class="mt-2 text-sm leading-relaxed text-slate-500">Akses khusus untuk memantau alert, membuka identitas darurat, dan mencatat tindak lanjut.</p>
+    </div>
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -87,9 +95,14 @@ new #[Layout('layouts.guest')] class extends Component
         </div>
 
         <!-- Tombol Masuk -->
-        <button type="submit"
-                class="w-full mt-6 py-3 bg-blue-800 hover:bg-blue-900 text-white font-medium text-base rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-            Masuk
+        <button type="submit" wire:loading.attr="disabled" wire:target="login"
+                class="w-full mt-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-medium text-base rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed">
+            <span wire:loading.remove wire:target="login">Masuk ke Panel Admin</span>
+            <span wire:loading wire:target="login">Memproses...</span>
         </button>
+
+        <div class="mt-4 rounded-xl border border-red-100 bg-red-50 px-4 py-3">
+            <p class="text-xs leading-relaxed text-red-800">Akses terbatas. Semua aktivitas pembukaan identitas dan tindak lanjut tercatat untuk audit.</p>
+        </div>
     </form>
 </div>

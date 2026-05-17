@@ -1,4 +1,17 @@
 <div class="space-y-4" wire:key="alert-panel">
+    {{-- ═══ Flash Notification ═══ --}}
+    @if(session('alert-success'))
+    <div class="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3 shadow-sm"
+         x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" x-transition>
+        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+        </div>
+        <p class="text-sm font-medium text-green-700">{{ session('alert-success') }}</p>
+        <button @click="show = false" class="ml-auto text-green-400 hover:text-green-600">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+        </button>
+    </div>
+    @endif
     {{-- ═══ Banner Atas (Merah) ═══ --}}
     <div class="bg-gradient-to-r from-red-600 to-red-700 rounded-xl p-5 sm:p-6 shadow-sm">
         <div class="flex items-start gap-3">
@@ -39,7 +52,7 @@
 
             {{-- Cuplikan Teks --}}
             @if($alert->cuplikan_teks)
-            <p class="text-sm text-slate-700 bg-slate-50 rounded-lg p-3 border border-slate-100 leading-relaxed italic">"{{ $alert->cuplikan_teks }}"</p>
+            <p class="text-sm text-slate-700 bg-slate-50 rounded-lg p-3 border border-slate-100 leading-relaxed italic break-words">"{{ $alert->cuplikan_teks }}"</p>
             @endif
 
             @if($alert->admin_steps && count($alert->admin_steps) > 0)
@@ -52,7 +65,7 @@
                     @foreach($alert->admin_steps as $step)
                     <li class="flex gap-2 text-sm text-red-800 leading-relaxed">
                         <span class="flex-shrink-0 w-5 h-5 rounded-full bg-red-100 text-red-700 text-xs font-bold flex items-center justify-center">{{ $loop->iteration }}</span>
-                        <span>{{ $step }}</span>
+                        <span class="break-words">{{ $step }}</span>
                     </li>
                     @endforeach
                 </ol>
@@ -73,7 +86,7 @@
                 </button>
                 @endif
 
-                <button wire:click="handleAlert({{ $alert->id }})" wire:confirm="Yakin ingin menandai alert ini sebagai ditindaklanjuti?"
+                <button wire:click="openHandleModal({{ $alert->id }})"
                         class="inline-flex w-full sm:w-auto items-center justify-center gap-2 bg-green-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-green-700 transition-colors min-h-[44px]">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
                     Tindaklanjuti
@@ -89,12 +102,12 @@
                 Identitas dibuka pada {{ $alert->opened_at ? $alert->opened_at->translatedFormat('d M Y') . ', ' . $alert->opened_at->format('H.i') : now()->translatedFormat('d M Y') . ', ' . now()->format('H.i') }}
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div><p class="text-xs text-slate-500">Nama Lengkap</p><p class="text-sm font-medium text-slate-800">{{ $alert->user->nama ?? '-' }}</p></div>
-                <div><p class="text-xs text-slate-500">NIM</p><p class="text-sm font-medium text-slate-800">{{ $alert->user->nim ?? '-' }}</p></div>
-                <div><p class="text-xs text-slate-500">Jurusan / Program Studi</p><p class="text-sm font-medium text-slate-800">{{ $alert->user->jurusan ?? '-' }} — {{ $alert->user->program_studi ?? '-' }}</p></div>
-                <div><p class="text-xs text-slate-500">Email</p><p class="text-sm font-medium text-slate-800">{{ $alert->user->email ?? '-' }}</p></div>
-                <div><p class="text-xs text-slate-500">Telepon Mahasiswa</p><p class="text-sm font-medium text-slate-800">{{ $alert->user->no_telepon ?? '-' }}</p></div>
-                <div><p class="text-xs text-slate-500 text-red-600 font-semibold">Kontak Darurat</p><p class="text-sm font-bold text-red-700">{{ $alert->user->kontak_darurat ?? '-' }}</p></div>
+                <div><p class="text-xs text-slate-500">Nama Lengkap</p><p class="text-sm font-medium text-slate-800 break-words">{{ $alert->user->nama ?? '-' }}</p></div>
+                <div><p class="text-xs text-slate-500">NIM</p><p class="text-sm font-medium text-slate-800 break-words">{{ $alert->user->nim ?? '-' }}</p></div>
+                <div><p class="text-xs text-slate-500">Jurusan / Program Studi</p><p class="text-sm font-medium text-slate-800 break-words">{{ $alert->user->jurusan ?? '-' }} — {{ $alert->user->program_studi ?? '-' }}</p></div>
+                <div><p class="text-xs text-slate-500">Email</p><p class="text-sm font-medium text-slate-800 break-all">{{ $alert->user->email ?? '-' }}</p></div>
+                <div><p class="text-xs text-slate-500">Telepon Mahasiswa</p><p class="text-sm font-medium text-slate-800 break-words">{{ $alert->user->no_telepon ?? '-' }}</p></div>
+                <div><p class="text-xs text-slate-500 text-red-600 font-semibold">Kontak Darurat</p><p class="text-sm font-bold text-red-700 break-words">{{ $alert->user->kontak_darurat ?? '-' }}</p></div>
             </div>
             {{-- Tombol Aksi Cepat --}}
             <div class="flex flex-wrap gap-3 mt-4 pt-4 border-t border-blue-200">
@@ -123,4 +136,89 @@
         <p class="text-slate-400 text-sm mt-1">Semua kasus telah ditindaklanjuti. {{ $handledCount }} alert total telah di-handle.</p>
     </div>
     @endforelse
+
+    {{-- ═══ Modal Konfirmasi Tindak Lanjut ═══ --}}
+    @if($showHandleModal)
+    @php $modalAlert = \App\Models\Alert::with('user:id,username_anonim')->find($handlingAlertId); @endphp
+    <div class="fixed inset-0 z-[60] flex items-center justify-center p-4" x-data x-transition>
+        {{-- Backdrop --}}
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" wire:click="closeHandleModal"></div>
+
+        {{-- Modal Content --}}
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto z-10">
+            {{-- Header --}}
+            <div class="sticky top-0 bg-white border-b border-slate-200 rounded-t-2xl px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-slate-800">Konfirmasi Tindak Lanjut</h3>
+                        <p class="text-xs text-slate-500">Catat tindakan yang telah dilakukan</p>
+                    </div>
+                </div>
+                <button wire:click="closeHandleModal" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition-colors">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            {{-- Body --}}
+            <div class="px-6 py-5 space-y-4">
+                {{-- Ringkasan Alert --}}
+                @if($modalAlert)
+                <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold {{ $modalAlert->label >= 3 ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700' }}">
+                            {{ $modalAlert->label >= 3 ? 'KRITIS' : 'WASPADA' }}
+                        </span>
+                        <span class="text-xs text-slate-400">{{ $modalAlert->created_at->translatedFormat('d M Y') }}, {{ $modalAlert->created_at->format('H.i') }}</span>
+                    </div>
+                    @if($modalAlert->cuplikan_teks)
+                    <p class="text-sm text-slate-600 italic leading-relaxed break-words">"{{ mb_substr($modalAlert->cuplikan_teks, 0, 120) }}{{ mb_strlen($modalAlert->cuplikan_teks) > 120 ? '...' : '' }}"</p>
+                    @endif
+                    <p class="text-xs text-slate-400 mt-2">Mahasiswa: {{ $modalAlert->user->username_anonim ?? 'Anonim' }}</p>
+                </div>
+                @endif
+
+                {{-- Form Catatan --}}
+                <div>
+                    <label for="catatan-tindak-lanjut" class="block text-sm font-medium text-slate-700 mb-2">
+                        Catatan Tindak Lanjut <span class="text-red-500">*</span>
+                    </label>
+                    <textarea wire:model="catatanTindakLanjut" id="catatan-tindak-lanjut" rows="4"
+                              placeholder="Contoh: Mahasiswa sudah dihubungi via telepon. Dijadwalkan konseling pada hari Senin, 19 Mei 2026 pukul 10.00 WIB dengan konselor kampus."
+                              class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"></textarea>
+                    @error('catatanTindakLanjut')
+                    <p class="text-xs text-red-500 mt-1.5 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"/></svg>
+                        {{ $message }}
+                    </p>
+                    @enderror
+                    <p class="text-xs text-slate-400 mt-1.5">Minimal 5 karakter. Catatan ini akan tersimpan di log aktivitas.</p>
+                </div>
+            </div>
+
+            {{-- Footer --}}
+            <div class="sticky bottom-0 bg-white border-t border-slate-200 rounded-b-2xl px-6 py-4 flex flex-col-reverse sm:flex-row gap-3 sm:justify-end">
+                <button wire:click="closeHandleModal"
+                        class="w-full sm:w-auto px-5 py-2.5 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors min-h-[44px]">
+                    Batal
+                </button>
+                <button wire:click="confirmHandle"
+                        wire:loading.attr="disabled"
+                        wire:target="confirmHandle"
+                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span wire:loading.remove wire:target="confirmHandle">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+                    </span>
+                    <span wire:loading wire:target="confirmHandle">
+                        <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                    </span>
+                    <span wire:loading.remove wire:target="confirmHandle">Konfirmasi Tindak Lanjut</span>
+                    <span wire:loading wire:target="confirmHandle">Memproses...</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>

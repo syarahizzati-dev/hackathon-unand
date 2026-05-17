@@ -17,21 +17,28 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-['Inter',sans-serif] text-slate-900 antialiased">
-        <div class="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6"
-             style="background-image: linear-gradient(150deg, #eff6ff 0%, #ffffff 50%, #eff6ff 100%);">
+        <div class="relative min-h-screen overflow-hidden flex flex-col items-center justify-center px-4 py-8 sm:px-6"
+             style="background-image: radial-gradient(circle at top left, rgba(37, 99, 235, 0.16), transparent 32rem), radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.12), transparent 28rem), linear-gradient(150deg, #eff6ff 0%, #ffffff 48%, #f8fafc 100%);">
+            <div class="pointer-events-none absolute inset-0 opacity-[0.035]" style="background-image: radial-gradient(#1e293b 1px, transparent 1px); background-size: 22px 22px;"></div>
 
             <!-- Logo + Branding -->
-            <div class="flex flex-col items-center mb-8">
+            <div class="relative flex flex-col items-center mb-8">
                 <img src="{{ asset('images/logo-campus-e.png') }}" alt="CAMPUS-E Logo"
-                     class="w-16 h-16 sm:w-20 sm:h-20 md:w-[73px] md:h-[73px] mb-4 object-contain drop-shadow-lg" />
+                     class="w-16 h-16 sm:w-20 sm:h-20 mb-4 object-contain drop-shadow-lg" />
                 <h1 class="text-2xl sm:text-[30px] font-bold text-slate-800 leading-9 text-center">CAMPUS-E</h1>
                 <p class="text-slate-500 text-sm sm:text-base mt-1 text-center">Sistem Prediksi Resiko Depresi Mahasiswa</p>
             </div>
 
+            @php($authWidth = request()->routeIs('register') ? 'sm:max-w-2xl lg:max-w-3xl' : 'sm:max-w-md lg:max-w-lg')
+
             <!-- Form Card -->
-            <div class="w-full sm:max-w-md lg:max-w-lg bg-white border border-slate-200 rounded-xl shadow-sm p-6 sm:p-8">
+            <div class="relative w-full {{ $authWidth }} bg-white/95 backdrop-blur border border-blue-100/80 rounded-2xl shadow-xl shadow-blue-900/5 p-5 sm:p-8">
                 {{ $slot }}
             </div>
+
+            <p class="relative mt-5 text-center text-xs sm:text-sm text-slate-500">
+                Privasi dijaga <span class="mx-1 text-slate-300">•</span> Ruang curhat anonim <span class="mx-1 text-slate-300">•</span> Alert untuk keselamatan
+            </p>
         </div>
     </body>
 </html>

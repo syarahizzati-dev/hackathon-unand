@@ -52,8 +52,22 @@ new #[Layout('layouts.guest')] class extends Component
 }; ?>
 
 <div>
+    <div class="mb-6">
+        <span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700 ring-1 ring-emerald-100">
+            Pendaftaran Mahasiswa
+        </span>
+        <h2 class="mt-4 text-2xl font-bold tracking-tight text-slate-900">Buat akun CAMPUS-E</h2>
+        <p class="mt-2 text-sm leading-relaxed text-slate-500">Isi data dengan benar agar sistem dapat memberi dukungan yang aman saat dibutuhkan.</p>
+    </div>
+
     <form wire:submit="register">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div class="lg:col-span-2 flex items-center gap-3 pt-1">
+                <div class="h-px flex-1 bg-slate-200"></div>
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Data Diri</p>
+                <div class="h-px flex-1 bg-slate-200"></div>
+            </div>
+
             <!-- Nama Lengkap -->
             <div>
                 <label for="nama" class="block text-sm font-medium text-slate-800 mb-1">Nama Lengkap</label>
@@ -102,18 +116,30 @@ new #[Layout('layouts.guest')] class extends Component
                 @error('no_telepon') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
             </div>
 
+            <div class="lg:col-span-2 flex items-center gap-3 pt-2">
+                <div class="h-px flex-1 bg-slate-200"></div>
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Data Akademik</p>
+                <div class="h-px flex-1 bg-slate-200"></div>
+            </div>
+
             <!-- Jurusan -->
             <div>
                 <label for="jurusan" class="block text-sm font-medium text-slate-800 mb-1">Jurusan</label>
-                <input wire:model="jurusan" id="jurusan" type="text" class="block w-full px-4 py-3 border border-slate-200 rounded-lg text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Teknologi Informasi" required />
+                <input wire:model="jurusan" id="jurusan" type="text" class="block w-full px-4 py-3 border border-slate-200 rounded-lg text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Teknologi Informasi" required />
                 @error('jurusan') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
             </div>
 
             <!-- Program Studi -->
             <div>
                 <label for="program_studi" class="block text-sm font-medium text-slate-800 mb-1">Program Studi</label>
-                <input wire:model="program_studi" id="program_studi" type="text" class="block w-full px-4 py-3 border border-slate-200 rounded-lg text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="D3 Manajemen Informatika" required />
+                <input wire:model="program_studi" id="program_studi" type="text" class="block w-full px-4 py-3 border border-slate-200 rounded-lg text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: D3 Manajemen Informatika" required />
                 @error('program_studi') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+            </div>
+
+            <div class="lg:col-span-2 flex items-center gap-3 pt-2">
+                <div class="h-px flex-1 bg-slate-200"></div>
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Kontak dan Keamanan</p>
+                <div class="h-px flex-1 bg-slate-200"></div>
             </div>
 
             <!-- Kontak Darurat (full width) -->
@@ -125,6 +151,7 @@ new #[Layout('layouts.guest')] class extends Component
                     </div>
                     <input wire:model="kontak_darurat" id="kontak_darurat" type="text" class="block w-full pl-10 pr-4 py-3 border border-slate-200 rounded-lg text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Nomor orang tua/wali" required />
                 </div>
+                <p class="mt-1.5 text-xs leading-relaxed text-slate-500">Digunakan hanya jika sistem mendeteksi risiko tinggi dan admin perlu tindak lanjut darurat.</p>
                 @error('kontak_darurat') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
             </div>
 
@@ -162,9 +189,10 @@ new #[Layout('layouts.guest')] class extends Component
         </div>
 
         <!-- Tombol Daftar -->
-        <button type="submit"
-                class="w-full mt-6 py-3 bg-blue-800 hover:bg-blue-900 text-white font-medium text-base rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-            Daftar
+        <button type="submit" wire:loading.attr="disabled" wire:target="register"
+                class="w-full mt-6 py-3 bg-blue-800 hover:bg-blue-900 text-white font-medium text-base rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed">
+            <span wire:loading.remove wire:target="register">Daftar dan Lanjut ke Login</span>
+            <span wire:loading wire:target="register">Mendaftarkan...</span>
         </button>
 
         <!-- Link Login -->

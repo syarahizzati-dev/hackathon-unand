@@ -10,7 +10,7 @@
                 <p class="text-sm text-slate-500 mt-0.5">Tempat Curhat Aman & Anonim</p>
             </div>
         </div>
-        <div class="mt-4 bg-blue-50 border border-blue-100 rounded-lg p-4 text-sm text-blue-800 leading-relaxed">
+        <div class="mt-4 bg-blue-50 border border-blue-100 rounded-lg p-4 text-sm text-blue-800 leading-relaxed break-words">
             🔒 Tuliskan apa saja yang kamu rasakan hari ini. Ini adalah ruang aman kamu. Sistem kami akan menjaga privasi tulisanmu sambil memantau kesehatan mentalmu secara diam-diam.
         </div>
     </div>
@@ -25,7 +25,7 @@
     @else
     <div class="space-y-4">
         @foreach($entries as $entry)
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sm:p-5">
             <div class="flex items-start gap-3">
                 <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                     <svg class="w-5 h-5 text-blue-700" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
@@ -35,7 +35,7 @@
                         <span class="text-sm font-medium text-slate-800">Kamu ({{ Auth::user()->username_anonim }})</span>
                         <span class="text-xs text-slate-400">{{ $entry->created_at->translatedFormat('l, d M Y') }} {{ $entry->created_at->format('H.i') }}</span>
                     </div>
-                    <p class="mt-2 text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">{{ $entry->isi }}</p>
+                    <p class="mt-2 text-sm text-slate-700 whitespace-pre-wrap leading-relaxed break-words">{{ $entry->isi }}</p>
                 </div>
             </div>
             {{-- AI Reply jika sudah dianalisis --}}
@@ -47,7 +47,7 @@
                     </div>
                     <span class="text-xs font-semibold text-blue-700 uppercase tracking-wider">CAMPUS-E AI Assistant</span>
                 </div>
-                <p class="text-sm text-slate-700 leading-relaxed">{{ $entry->ai_reply }}</p>
+                <p class="text-sm text-slate-700 leading-relaxed break-words">{{ $entry->ai_reply }}</p>
                 @if($entry->ai_saran && count($entry->ai_saran) > 0)
                 <div class="mt-3 bg-white rounded-lg p-3 border border-blue-100">
                     <div class="flex items-center gap-1.5 mb-2">
@@ -56,7 +56,7 @@
                     </div>
                     <ul class="space-y-1.5">
                         @foreach($entry->ai_saran as $saran)
-                        <li class="flex items-start gap-2 text-sm text-slate-600">
+                        <li class="flex items-start gap-2 text-sm text-slate-600 break-words">
                             <span class="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 flex-shrink-0"></span>
                             {{ $saran }}
                         </li>
@@ -82,7 +82,7 @@
     @endif
 
     {{-- Input Area --}}
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sticky bottom-16 md:bottom-0 z-30">
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sticky bottom-16 md:bottom-0 z-30 pb-[calc(1rem+env(safe-area-inset-bottom))] md:pb-4">
         <form wire:submit="simpan">
             <textarea wire:model.live="newEntry" rows="3" placeholder="Tulis curhatan atau perasaanmu hari ini..."
                       class="w-full border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none min-h-[44px]"
@@ -90,7 +90,7 @@
             @error('newEntry')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
             <div class="flex justify-end mt-2">
                 <button type="submit" {{ empty($newEntry) ? 'disabled' : '' }}
-                        class="inline-flex items-center gap-2 bg-blue-700 text-white font-medium text-sm px-5 py-2.5 rounded-lg hover:bg-blue-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed min-h-[44px]">
+                        class="inline-flex w-full sm:w-auto items-center justify-center gap-2 bg-blue-700 text-white font-medium text-sm px-5 py-2.5 rounded-lg hover:bg-blue-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed min-h-[44px]">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/></svg>
                     Simpan Curhatan
                 </button>

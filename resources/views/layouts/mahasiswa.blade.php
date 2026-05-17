@@ -100,12 +100,12 @@
     </nav>
 
     {{-- ═══ Main Content ═══ --}}
-    <main class="flex-1 w-full px-4 sm:px-6 lg:px-0 lg:max-w-5xl lg:mx-auto py-6 pb-24 md:pb-6">
+    <main class="flex-1 w-full px-4 sm:px-6 lg:px-0 lg:max-w-5xl lg:mx-auto py-5 sm:py-6 pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-6">
         @yield('content')
     </main>
 
     {{-- Mobile bottom tab bar --}}
-    <nav class="md:hidden fixed bottom-0 inset-x-0 z-50 bg-white border-t border-slate-200 safe-area-bottom">
+    <nav class="md:hidden fixed bottom-0 inset-x-0 z-50 bg-white border-t border-slate-200 pb-[env(safe-area-inset-bottom)] safe-area-bottom">
         <div class="flex items-center justify-around h-14">
             @foreach ($tabs as $tab)
                 <a href="{{ route($tab['route']) }}" wire:navigate
